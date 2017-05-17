@@ -1,11 +1,43 @@
 # encoding=utf-8
 
 import json
-import requests
+import importlib
 import logging
+import requests
 import os
 
+
 logging.basicConfig(level=logging.INFO, handlers=[logging.FileHandler("log.log", "a", "utf-8")])
+
+
+class Config:
+
+    def __init__(self):
+        self.matches = []
+        self.plugins = []
+        self.config = None
+
+        self.load_config()
+        self.load_plugins()
+
+    def load_config(self):
+        """ Carrega o arquivo json e retorna um objeto com as configurações. """
+        if os.path.isfile("data/config.json"):
+            with open("data/config.json") as fp:
+                self.config = json.load(fp)
+        else:
+            logging.info("Arquivo de config não encontrado.")
+            exit(6924)
+
+    def save_config(self):
+        """ Salva o objeto JSON atual pro arquivo. """
+        with open("data/config.json") as fp:
+            json.dump(self.config, fp)
+
+    def load_plugins(self):
+        """ Carrega os plugins constidos em "data/config.json" e retorna uma lista com todos eles importados. """
+        for plugin in self.config["enabled_plugins"]:
+            self.plugins.append(importlib.import_module("plugins." + plugin))
 
 
 def msg_type(msg):
@@ -32,6 +64,7 @@ def msg_origin(msg):
 
 
 def log(msg):
+    """ Loga pra arquivo tudo o que acontecer. """
     log_str = ""
 
     log_str += msg["from"]["first_name"] + " enviou " + msg_type(msg) + " "
@@ -48,12 +81,32 @@ def log(msg):
     print(log_str)
 
 
+def is_authorized(msg):
+    if msg["from"]["id"] in config.config["authorized_users"]:
+        return True
+    else:
+        return False
+
+
+def msg_matches(pattern, plugin):
+    pass
+
+
 def on_msg_received(msg):
     """ Callback pra quando uma mensagem é recebida. """
-    log(msg)
+
+    if is_authorized(msg):
+        log(msg)
+
+        for plugin in config.plugins:
+            plugin.on_msg_received(msg)
+    else:
+        logging.info("Mensagem não autorizada de " + msg["from"]["first_name"])
+        print("Mensagem não autorizada de " + msg["from"]["first_name"])
 
 
 def on_msg_edited(msg):
+    """ Callback que define o que acontecerá quando uma mensagem for editada. """
     pass
 
 
@@ -88,7 +141,7 @@ def send_message(chat_id, text, parsemode="Markdown", reply_to_message_id=0, rep
 
 
 def start_longpoll():
-    """ Inicia longpolling do get_updates"""
+    """ Inicia longpolling do get_updates. """
     most_recent = 0
 
     while True:
@@ -105,9 +158,10 @@ def start_longpoll():
 
 
 def main():
-    """ Entry point né porra"""
+    """ Entry point né porra. """
     start_longpoll()
 
 
 if __name__ == "__main__":
+    config = Config()
     main()
