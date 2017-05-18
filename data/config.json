@@ -1,0 +1,12 @@
+{
+    "sudoers": 14160874,
+
+    "authorized_users": [
+        14160874
+    ],
+
+    "enabled_plugins": {
+        "^!img (.*)": "teste"
+    }
+
+}
