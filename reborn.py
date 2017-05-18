@@ -5,6 +5,7 @@ import importlib
 import logging
 import requests
 import os
+import re
 
 
 logging.basicConfig(level=logging.INFO, handlers=[logging.FileHandler("log.log", "a", "utf-8")])
@@ -13,8 +14,7 @@ logging.basicConfig(level=logging.INFO, handlers=[logging.FileHandler("log.log",
 class Config:
 
     def __init__(self):
-        self.matches = []
-        self.plugins = []
+        self.plugins = {}
         self.config = None
 
         self.load_config()
@@ -35,9 +35,8 @@ class Config:
             json.dump(self.config, fp)
 
     def load_plugins(self):
-        """ Carrega os plugins constidos em "data/config.json" e retorna uma lista com todos eles importados. """
-        for plugin in self.config["enabled_plugins"]:
-            self.plugins.append(importlib.import_module("plugins." + plugin))
+        """ Carrega os plugins contidos em "data/config.json" e retorna uma lista com todos eles importados. """
+        self.plugins = self.config["object_test"]
 
 
 def msg_type(msg):
@@ -65,14 +64,15 @@ def msg_origin(msg):
 
 def log(msg):
     """ Loga pra arquivo tudo o que acontecer. """
-    log_str = ""
+    origin = msg_origin(msg)
 
+    log_str = ""
     log_str += msg["from"]["first_name"] + " enviou " + msg_type(msg) + " "
 
-    if msg_origin(msg) == "group":
+    if origin == "group":
         log_str += "em " + msg["chat"]["title"]
-    elif msg_origin(msg) == "private":
-        log_str += " em PRIVADO"
+    elif origin == "private":
+        log_str += "em PRIVADO"
 
     if msg_type(msg) == "text":
         log_str += ": " + msg["text"]
@@ -88,8 +88,15 @@ def is_authorized(msg):
         return False
 
 
-def msg_matches(pattern, plugin):
-    pass
+def msg_matches(msg_text):
+    for query, plugin in config.plugins.items():
+        pattern = re.compile(query)
+        match = pattern.search(msg_text)
+
+        if match:
+            return plugin
+
+    return None
 
 
 def on_msg_received(msg):
@@ -98,8 +105,13 @@ def on_msg_received(msg):
     if is_authorized(msg):
         log(msg)
 
-        for plugin in config.plugins:
-            plugin.on_msg_received(msg)
+        if msg_type(msg) == "text":
+            plugin_match = msg_matches(msg["text"])
+
+            if plugin_match is not None:
+                loaded = importlib.import_module("plugins." + plugin_match)
+                loaded.on_msg_received(msg)
+
     else:
         logging.info("Mensagem não autorizada de " + msg["from"]["first_name"])
         print("Mensagem não autorizada de " + msg["from"]["first_name"])
