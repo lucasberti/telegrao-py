@@ -36,7 +36,7 @@ class Config:
 
     def load_plugins(self):
         """ Carrega os plugins contidos em "data/config.json" e retorna uma lista com todos eles importados. """
-        self.plugins = self.config["object_test"]
+        self.plugins = self.config["enabled_plugins"]
 
 
 def msg_type(msg):
@@ -64,21 +64,26 @@ def msg_origin(msg):
 
 def log(msg):
     """ Loga pra arquivo tudo o que acontecer. """
-    origin = msg_origin(msg)
 
-    log_str = ""
-    log_str += msg["from"]["first_name"] + " enviou " + msg_type(msg) + " "
+    if type(msg) is str:
+        logging.info(msg)
+        print(msg)
+    else:
+        origin = msg_origin(msg)
 
-    if origin == "group":
-        log_str += "em " + msg["chat"]["title"]
-    elif origin == "private":
-        log_str += "em PRIVADO"
+        log_str = ""
+        log_str += msg["from"]["first_name"] + " enviou " + msg_type(msg) + " "
 
-    if msg_type(msg) == "text":
-        log_str += ": " + msg["text"]
+        if origin == "group":
+            log_str += "em " + msg["chat"]["title"]
+        elif origin == "private":
+            log_str += "em PRIVADO"
 
-    logging.info(log_str)
-    print(log_str)
+        if msg_type(msg) == "text":
+            log_str += ": " + msg["text"]
+
+        logging.info(log_str)
+        print(log_str)
 
 
 def is_authorized(msg):
@@ -94,9 +99,9 @@ def msg_matches(msg_text):
         match = pattern.search(msg_text)
 
         if match:
-            return plugin
+            return plugin, match
 
-    return None
+    return None, None
 
 
 def on_msg_received(msg):
@@ -106,11 +111,11 @@ def on_msg_received(msg):
         log(msg)
 
         if msg_type(msg) == "text":
-            plugin_match = msg_matches(msg["text"])
+            plugin_match, matches = msg_matches(msg["text"])
 
-            if plugin_match is not None:
+            if plugin_match is not None and matches is not None:
                 loaded = importlib.import_module("plugins." + plugin_match)
-                loaded.on_msg_received(msg)
+                loaded.on_msg_received(msg, matches)
 
     else:
         logging.info("Mensagem não autorizada de " + msg["from"]["first_name"])
@@ -171,6 +176,7 @@ def start_longpoll():
 
 def main():
     """ Entry point né porra. """
+    log("Iniciando sessão")
     start_longpoll()
 
 
