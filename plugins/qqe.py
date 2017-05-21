@@ -3,7 +3,6 @@ import requests
 
 def on_msg_received(msg, matches):
     url = "https://s.dicio.com.br/" + matches.group(1) + ".jpg"
-
     image = requests.get(url)
 
     if image:

@@ -6,6 +6,8 @@ import logging
 import requests
 import os
 import re
+from time import gmtime
+from calendar import timegm
 
 
 logging.basicConfig(level=logging.INFO, handlers=[logging.FileHandler("log.log", "a", "utf-8")])
@@ -72,16 +74,17 @@ def log(msg):
         print(msg)
     else:
         origin = msg_origin(msg)
+        message_type = msg_type(msg)
 
         log_str = ""
-        log_str += msg["from"]["first_name"] + " enviou " + msg_type(msg) + " "
+        log_str += msg["from"]["first_name"] + " enviou " + message_type + " "
 
         if origin == "group":
-            log_str += "em " + msg["chat"]["title"]
+            log_str += "em \"" + msg["chat"]["title"] + "\""
         elif origin == "private":
             log_str += "em PRIVADO"
 
-        if msg_type(msg) == "text":
+        if message_type == "text":
             log_str += ": " + msg["text"]
 
         logging.info(log_str)
@@ -185,10 +188,13 @@ def start_longpoll():
 
         if updates is not None:
             for update in updates:
-                if "message" in update:
-                    on_msg_received(update["message"])
-                elif "edited_message" in update:
-                    on_msg_edited(update["edited_message"])
+                if timegm(gmtime()) - update["message"]["date"] < 10:
+                    if "message" in update:
+                        on_msg_received(update["message"])
+                    elif "edited_message" in update:
+                        on_msg_edited(update["edited_message"])
+                else:
+                    log("Mensagem muito antiga; ignorando.")
 
                 most_recent = update["update_id"] + 1
 
