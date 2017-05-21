@@ -26,4 +26,3 @@ def on_msg_received(msg, matches):
 
     reborn.send_message(msg["chat"]["id"], "AE pora ta aki a imag......")
     reborn.send_photo(msg["chat"]["id"], img["link"], img["snippet"])
-    # print("ae carai: ", matches.group(1))
