@@ -188,11 +188,10 @@ def start_longpoll():
 
         if updates is not None:
             for update in updates:
-                if timegm(gmtime()) - update["message"]["date"] < 10:
-                    if "message" in update:
-                        on_msg_received(update["message"])
-                    elif "edited_message" in update:
-                        on_msg_edited(update["edited_message"])
+                if "message" in update and timegm(gmtime()) - update["message"]["date"] < 10:
+                    on_msg_received(update["message"])
+                elif "edited_message" in update and timegm(gmtime()) - update["edited_message"]["date"] < 10:
+                    on_msg_edited(update["edited_message"])
                 else:
                     log("Mensagem muito antiga; ignorando.")
 
