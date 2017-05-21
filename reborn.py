@@ -101,6 +101,7 @@ def msg_matches(msg_text):
         match = pattern.search(msg_text)
 
         if match:
+            log("MATCH! Plugin: " + plugin)
             return plugin, match
 
     return None, None
@@ -120,8 +121,7 @@ def on_msg_received(msg):
                 loaded.on_msg_received(msg, matches)
 
     else:
-        logging.info("Mensagem não autorizada de " + msg["from"]["first_name"])
-        print("Mensagem não autorizada de " + msg["from"]["first_name"])
+        log("Mensagem não autorizada de " + msg["from"]["first_name"])
 
 
 def on_msg_edited(msg):
