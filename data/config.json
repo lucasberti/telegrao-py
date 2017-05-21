@@ -11,7 +11,7 @@
     ],
 
     "enabled_plugins": {
-        "^[!/]img(?:@PintaoBot)? (.*)": "teste"
+        "^[!/]img(?:@PintaoBot)? (.*)": "img"
     }
 
 }
