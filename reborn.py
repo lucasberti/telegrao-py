@@ -55,6 +55,8 @@ def msg_type(msg):
         return "audio"
     elif "sticker" in msg:
         return "sticker"
+    elif "video_note" in msg:
+        return "video note"
 
 
 def msg_origin(msg):
@@ -148,6 +150,23 @@ def send_message(chat_id, text, parsemode="Markdown", reply_to_message_id=0, rep
     url += "chat_id=" + str(chat_id) + "&"
     url += "text=" + text + "&"
     url += "parsemode=" + parsemode + "&"
+    if reply_to_message_id:
+        url += "reply_to_message_id=" + str(reply_to_message_id) + "&"
+
+    response = requests.get(url)
+    response = json.loads(response.content)
+
+    return response["ok"]
+
+
+def send_photo(chat_id, photo_url, caption, reply_to_message_id=0):
+    """ reply_markup não é apenas ID, é uma array com opções. """
+    url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendPhoto?"
+    url += "chat_id=" + str(chat_id) + "&"
+    url += "photo=" + photo_url + "&"
+
+    if caption:
+        url += "caption=" + caption + "&"
     if reply_to_message_id:
         url += "reply_to_message_id=" + str(reply_to_message_id) + "&"
 
