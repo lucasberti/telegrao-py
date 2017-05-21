@@ -16,7 +16,7 @@ def requestGoogle(query):
     response = requests.get(url)
     response = json.loads(response.content)
 
-    index = random.randint(0, len(response["items"]))
+    index = random.randint(0, len(response["items"]) - 1)
 
     return response["items"][index]
 
