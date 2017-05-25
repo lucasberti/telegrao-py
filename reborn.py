@@ -132,6 +132,13 @@ def on_msg_edited(msg):
     pass
 
 
+def on_callback_query(msg):
+    """ Callback que define o que acontecerá quando um dado de um InlineKeyboardButton for recebido. """
+    for plugin in config.config["callback_query_plugins"]:
+        loaded = importlib.import_module("plugins." + plugin)
+        loaded.on_callback_query(msg)
+
+
 def get_updates(offset=0, timeout=60):
     """ Por default, faz longpoll. Retorna uma array de Update """
     url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/getUpdates?"
@@ -192,6 +199,8 @@ def start_longpoll():
                     on_msg_received(update["message"])
                 elif "edited_message" in update and timegm(gmtime()) - update["edited_message"]["date"] < 10:
                     on_msg_edited(update["edited_message"])
+                elif "callback_query" in update:
+                    on_callback_query(update["callback_query"])
                 else:
                     log("Mensagem muito antiga; ignorando.")
 

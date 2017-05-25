@@ -1,4 +1,4 @@
-import reborn
+from reborn import send_photo, send_message
 import requests
 import json
 import random
@@ -24,5 +24,5 @@ def requestGoogle(query):
 def on_msg_received(msg, matches):
     img = requestGoogle(matches.group(1))
 
-    reborn.send_message(msg["chat"]["id"], "AE pora ta aki a imag......")
-    reborn.send_photo(msg["chat"]["id"], img["link"], img["snippet"])
+    send_message(msg["chat"]["id"], "AE pora ta aki a imag......")
+    send_photo(msg["chat"]["id"], img["link"], img["snippet"])
