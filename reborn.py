@@ -59,6 +59,8 @@ def msg_type(msg):
         return "sticker"
     elif "video_note" in msg:
         return "video note"
+    else:
+        return "outra coisa"
 
 
 def msg_origin(msg):
@@ -166,7 +168,7 @@ def send_message(chat_id, text, parsemode="Markdown", reply_to_message_id=0, rep
     response = requests.get(url)
     response = json.loads(response.content)
 
-    return response["ok"]
+    return response
 
 
 def send_photo(chat_id, photo_url, caption, reply_to_message_id=0):
@@ -183,7 +185,7 @@ def send_photo(chat_id, photo_url, caption, reply_to_message_id=0):
     response = requests.get(url)
     response = json.loads(response.content)
 
-    return response["ok"]
+    return response
 
 
 def start_longpoll():
@@ -202,7 +204,7 @@ def start_longpoll():
                 elif "callback_query" in update:
                     on_callback_query(update["callback_query"])
                 else:
-                    log("Mensagem muito antiga; ignorando.")
+                    log("Mensagem muito antiga ou desconhecida; ignorando.")
 
                 most_recent = update["update_id"] + 1
 

@@ -13,7 +13,7 @@
     "enabled_plugins": {
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
         "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
-        "^[!/]vamojoga(?:@PintaoBot)? (.*) (.*)": "vamojoga"
+        "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)": "vamojoga"
     },
 
     "callback_query_plugins":
