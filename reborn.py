@@ -156,12 +156,12 @@ def get_updates(offset=0, timeout=60):
         return None
 
 
-def send_message(chat_id, text, parsemode="Markdown", reply_to_message_id="", reply_markup=""):
+def send_message(chat_id, text, parse_mode="Markdown", reply_to_message_id="", reply_markup=""):
     """ reply_markup não é apenas ID, é uma array com opções. """
     url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendMessage?"
     url += "chat_id=" + str(chat_id) + "&"
     url += "text=" + text + "&"
-    url += "parsemode=" + parsemode + "&"
+    url += "parse_mode=" + parse_mode + "&"
     if reply_to_message_id:
         url += "reply_to_message_id=" + str(reply_to_message_id) + "&"
     if reply_markup:
@@ -173,13 +173,13 @@ def send_message(chat_id, text, parsemode="Markdown", reply_to_message_id="", re
     return response
 
 
-def edit_message_text(chat_id, msg_id, text, parsemode="Markdown", reply_to_message_id="", reply_markup=""):
+def edit_message_text(chat_id, msg_id, text, parse_mode="Markdown", reply_to_message_id="", reply_markup=""):
     """ reply_markup não é apenas ID, é uma array com opções. """
     url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/editMessageText?"
     url += "chat_id=" + str(chat_id) + "&"
     url += "message_id=" + str(msg_id) + "&"
     url += "text=" + text + "&"
-    url += "parsemode=" + parsemode + "&"
+    url += "parse_mode=" + parse_mode + "&"
     if reply_to_message_id:
         url += "reply_to_message_id=" + str(reply_to_message_id) + "&"
     if reply_markup:

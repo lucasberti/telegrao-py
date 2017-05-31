@@ -23,20 +23,23 @@ class Voting:
     def number_going(self):
         return len(self.going)
 
-    def generate_str(self):
-        str = ""
-        str += "VAMO JOGA " + self.gamename.upper() + " CARAI VCSC TNE 3 MISNUTOS\n\n"
-        str += "QUEM VAI::::\n"
-
+    def going_as_str(self):
         members = ""
 
         if self.number_going() == 0:
             members = "ninggme"
         else:
             for user in self.going:
-                str += user + "\n"
+                members += "*" + user + "*\n"
 
-        return str + members
+        return members
+
+    def generate_str(self):
+        str = ""
+        str += "VAMO JOGA " + self.gamename.upper() + " CARAI VCSC TNE 3 MISNUTOS\n\n"
+        str += "QUEM VAI::::\n"
+
+        return str + self.going_as_str()
 
     def reset(self):
         self.active = False
@@ -55,14 +58,14 @@ def finishVoting(reason=0):
     # reason 0: tempo expirado
     # reason 1: todos confirmados
     if started():
-        print("Terminando votação...")
+        log("Terminando votação...")
 
         if reason == 0:
             send_message(voting.chatid, "acabando com esta merda de votacao......")
             edit_message_text(voting.chatid, voting.msg_id, "cabo esta merda")
         elif reason == 1:
             send_message(voting.chatid, "AE CARAI AGR A VAO JOGA TEU" + voting.gamename + ".....")
-            edit_message_text(voting.chatid, voting.msg_id, "cabo a votasao i todos jogo felis para senpre.....")
+            edit_message_text(voting.chatid, voting.msg_id, "cabo a votasao i todos jogo felis para senpre.....\n\nQUEM VAI::::\n" + voting.going_as_str())
 
         started(False)
         voting.reset()
@@ -114,7 +117,3 @@ def on_callback_query(msg):
                     finishVoting(1)
 
                 edit_message_text(voting.chatid, voting.msg_id, voting.generate_str(), reply_markup=MARKUP)
-
-        print("processa voto pq ta lgiado")
-    #else:
-    #    send_message(msg["chat"]["id"], "velho pq vc ta votando sendo q n tem votacao em seu UBRRO")
