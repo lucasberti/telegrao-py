@@ -147,8 +147,12 @@ def get_updates(offset=0, timeout=60):
     url += "offset=" + str(offset) + "&"
     url += "timeout=" + str(timeout) + "&"
 
-    response = requests.get(url)
-    response = json.loads(response.content)
+    try:
+        response = requests.get(url)
+        response = json.loads(response.content)
+    except:
+        log("Problema no getUpdates")
+        return None
 
     if response["ok"] is True:
         return response["result"]
