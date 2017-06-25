@@ -10,7 +10,9 @@ from time import gmtime
 from calendar import timegm
 
 
-logging.basicConfig(level=logging.INFO, handlers=[logging.FileHandler("log.log", "a", "utf-8")])
+logging.basicConfig(format='%(asctime)s.%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                    datefmt='%d-%m-%Y:%H:%M:%S',
+                    level=logging.INFO, handlers=[logging.FileHandler("log.log", "a", "utf-8")])
 
 
 class Config:
@@ -126,7 +128,7 @@ def on_msg_received(msg):
                 loaded.on_msg_received(msg, matches)
 
     else:
-        log("Mensagem não autorizada de " + msg["from"]["first_name"])
+        log("Mensagem não autorizada de " + msg["from"]["first_name"] + " (" + str(msg["from"]["id"]) + ")")
 
 
 def on_msg_edited(msg):
@@ -150,8 +152,7 @@ def get_updates(offset=0, timeout=60):
     try:
         response = requests.get(url)
         response = json.loads(response.content)
-    except:
-        log("Problema no getUpdates")
+    except Exception:
         return None
 
     if response["ok"] is True:
