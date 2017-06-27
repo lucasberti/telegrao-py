@@ -1,4 +1,4 @@
-from reborn import send_message, send_photo
+from api import send_message, send_photo
 import requests
 
 def on_msg_received(msg, matches):

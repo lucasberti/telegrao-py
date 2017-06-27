@@ -1,6 +1,7 @@
 {
-    "sudoers": 14160874,
-
+    "sudoers": [
+        14160874
+    ],
     "authorized_users": [
         14160874,
         16631085,
@@ -10,18 +11,14 @@
         10549434,
         25919148
     ],
-
     "enabled_plugins": {
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
-        "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
-        "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)": "vamojoga"
+        "^[!/]plugins(?:@PintaoBot)?( (.*) (.*))?": "plugins",
+        "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)": "vamojoga",
+        "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe"
     },
-
-    "callback_query_plugins":
-    [
+    "disabled_plugins": {},
+    "callback_query_plugins": [
         "vamojoga"
     ]
-
-
-
 }

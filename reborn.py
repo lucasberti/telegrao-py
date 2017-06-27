@@ -1,11 +1,10 @@
 # encoding=utf-8
 
-import json
+import api
 import importlib
 import logging
-import requests
-import os
 import re
+import config
 from time import gmtime
 from calendar import timegm
 
@@ -13,34 +12,6 @@ from calendar import timegm
 logging.basicConfig(format='%(asctime)s.%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                     datefmt='%d-%m-%Y:%H:%M:%S',
                     level=logging.INFO, handlers=[logging.FileHandler("log.log", "a", "utf-8")])
-
-
-class Config:
-
-    def __init__(self):
-        self.plugins = {}
-        self.config = None
-
-        self.load_config()
-        self.load_plugins()
-
-    def load_config(self):
-        """ Carrega o arquivo json e retorna um objeto com as configurações. """
-        if os.path.isfile("data/config.json"):
-            with open("data/config.json") as fp:
-                self.config = json.load(fp)
-        else:
-            logging.info("Arquivo de config não encontrado.")
-            exit(6924)
-
-    def save_config(self):
-        """ Salva o objeto JSON atual pro arquivo. """
-        with open("data/config.json") as fp:
-            json.dump(self.config, fp)
-
-    def load_plugins(self):
-        """ Carrega os plugins contidos em "data/config.json" e retorna uma lista com todos eles importados. """
-        self.plugins = self.config["enabled_plugins"]
 
 
 def msg_type(msg):
@@ -95,11 +66,12 @@ def log(msg):
         print(log_str)
 
 
+def is_sudoer(id):
+    return id in config.config["sudoers"]
+
+
 def is_authorized(msg):
-    if msg["from"]["id"] in config.config["authorized_users"]:
-        return True
-    else:
-        return False
+    return msg["from"]["id"] in config.config["authorized_users"]
 
 
 def msg_matches(msg_text):
@@ -143,82 +115,12 @@ def on_callback_query(msg):
         loaded.on_callback_query(msg)
 
 
-def get_updates(offset=0, timeout=60):
-    """ Por default, faz longpoll. Retorna uma array de Update """
-    url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/getUpdates?"
-    url += "offset=" + str(offset) + "&"
-    url += "timeout=" + str(timeout) + "&"
-
-    try:
-        response = requests.get(url)
-        response = json.loads(response.content)
-    except Exception:
-        return None
-
-    if response["ok"] is True:
-        return response["result"]
-    else:
-        return None
-
-
-def send_message(chat_id, text, parse_mode="Markdown", reply_to_message_id="", reply_markup=""):
-    """ reply_markup não é apenas ID, é uma array com opções. """
-    url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendMessage?"
-    url += "chat_id=" + str(chat_id) + "&"
-    url += "text=" + text + "&"
-    url += "parse_mode=" + parse_mode + "&"
-    if reply_to_message_id:
-        url += "reply_to_message_id=" + str(reply_to_message_id) + "&"
-    if reply_markup:
-        url += "reply_markup=" + str(reply_markup)
-
-    response = requests.get(url)
-    response = json.loads(response.content)
-
-    return response
-
-
-def edit_message_text(chat_id, msg_id, text, parse_mode="Markdown", reply_to_message_id="", reply_markup=""):
-    """ reply_markup não é apenas ID, é uma array com opções. """
-    url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/editMessageText?"
-    url += "chat_id=" + str(chat_id) + "&"
-    url += "message_id=" + str(msg_id) + "&"
-    url += "text=" + text + "&"
-    url += "parse_mode=" + parse_mode + "&"
-    if reply_to_message_id:
-        url += "reply_to_message_id=" + str(reply_to_message_id) + "&"
-    if reply_markup:
-        url += "reply_markup=" + str(reply_markup)
-
-    response = requests.get(url)
-    response = json.loads(response.content)
-
-    return response
-
-
-def send_photo(chat_id, photo_url, caption, reply_to_message_id=0):
-    """ reply_markup não é apenas ID, é uma array com opções. """
-    url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendPhoto?"
-    url += "chat_id=" + str(chat_id) + "&"
-    url += "photo=" + photo_url + "&"
-
-    if caption:
-        url += "caption=" + caption + "&"
-    if reply_to_message_id:
-        url += "reply_to_message_id=" + str(reply_to_message_id) + "&"
-
-    response = requests.get(url)
-    response = json.loads(response.content)
-
-    return response
-
-
 def start_longpoll():
     """ Inicia longpolling do get_updates. """
     most_recent = 0
 
     while True:
-        updates = get_updates(offset=most_recent)
+        updates = api.get_updates(offset=most_recent)
 
         if updates is not None:
             for update in updates:
@@ -241,5 +143,5 @@ def main():
 
 
 if __name__ == "__main__":
-    config = Config()
+    # config = Config()
     main()

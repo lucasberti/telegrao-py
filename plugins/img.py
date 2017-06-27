@@ -1,4 +1,5 @@
-from reborn import send_photo, send_message, log
+from api import send_photo, send_message
+from reborn import log
 import requests
 import json
 import random
