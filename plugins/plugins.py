@@ -8,8 +8,7 @@ def on_msg_received(msg, matches):
     command = matches.group(2)
     plugin = matches.group(3)
 
-
-    if is_sudoer(msg["from"]["id"]) and matches.group(2) == None and matches.group(3) == None:
+    if command == None and plugin == None:
         string = ""
         string += "atvdos::::: \n"
 
