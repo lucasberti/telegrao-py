@@ -80,7 +80,9 @@ def msg_matches(msg_text):
         match = pattern.search(msg_text)
 
         if match:
-            log("MATCH! Plugin: " + plugin)
+            if plugin != "multipurpose":
+                log("MATCH! Plugin: " + plugin)
+
             return plugin, match
 
     return None, None

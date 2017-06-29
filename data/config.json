@@ -15,7 +15,8 @@
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
         "^[!/]plugins(?:@PintaoBot)?( (.*) (.*))?": "plugins",
         "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)": "vamojoga",
-        "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe"
+        "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
+        "^(.*)$": "multipurpose"
     },
     "disabled_plugins": {},
     "callback_query_plugins": [

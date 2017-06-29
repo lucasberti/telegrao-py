@@ -8,7 +8,7 @@ def on_msg_received(msg, matches):
     command = matches.group(2)
     plugin = matches.group(3)
 
-    if command == None and plugin == None:
+    if command is None and plugin is None:
         string = ""
         string += "atvdos::::: \n"
 
@@ -28,7 +28,7 @@ def on_msg_received(msg, matches):
 
         send_message(msg["chat"]["id"], string)
 
-    elif is_sudoer(msg["from"]["id"]) and len(matches.groups()) == 3:
+    elif is_sudoer(msg["from"]["id"]) and command is not None and plugin is not None:
         if command == "enable":
             for query, plu in config.plugins.items():
                 # Se o plugin passado for encontrado nos plugins ativos, avisa e sai da função.
