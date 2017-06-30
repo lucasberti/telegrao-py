@@ -55,11 +55,28 @@ def edit_message_text(chat_id, msg_id, text, parse_mode="Markdown", reply_to_mes
     return response
 
 
-def send_photo(chat_id, photo_url, caption, reply_to_message_id=0):
+def send_photo(chat_id, photo_url, caption="", reply_to_message_id=0):
     """ reply_markup não é apenas ID, é uma array com opções. """
     url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendPhoto?"
     url += "chat_id=" + str(chat_id) + "&"
     url += "photo=" + photo_url + "&"
+
+    if caption:
+        url += "caption=" + caption + "&"
+    if reply_to_message_id:
+        url += "reply_to_message_id=" + str(reply_to_message_id) + "&"
+
+    response = requests.get(url)
+    response = json.loads(response.content)
+
+    return response
+
+
+def send_document(chat_id, document_url, caption="", reply_to_message_id=0):
+    """ reply_markup não é apenas ID, é uma array com opções. """
+    url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendDocument?"
+    url += "chat_id=" + str(chat_id) + "&"
+    url += "document=" + document_url + "&"
 
     if caption:
         url += "caption=" + caption + "&"

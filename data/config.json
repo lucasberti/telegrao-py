@@ -13,6 +13,7 @@
     ],
     "enabled_plugins": {
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
+        "^[!/]wunder(?:@PintaoBot)?( (.*) (.*))?$": "wunder",
         "^[!/]plugins(?:@PintaoBot)?( (.*) (.*))?": "plugins",
         "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)": "vamojoga",
         "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
