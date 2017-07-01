@@ -1,10 +1,9 @@
 # TODO: Async, !wunder add e talvez descobrir um jeito de não cortar a imagem
 
-import api
 import datetime
 import json
 import requests
-
+import api
 
 gUrlConditions  = "http://api.wunderground.com/api/dbcee4e7c140bb2d/lang:BR/conditions/forecast/q/"
 gUrlSatellite   = "http://api.wunderground.com/api/dbcee4e7c140bb2d/animatedsatellite/q/"
@@ -139,9 +138,6 @@ def on_msg_received(msg, matches):
     data            = get_conditions_and_forecast(location)
     satellite_img   = get_satellite_url(location)
     message         = generate_string(data)
-
-    print(message)
-    print(satellite_img)
 
     api.send_document(chat, satellite_img)
     api.send_message(chat, message)

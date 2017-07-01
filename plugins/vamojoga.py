@@ -1,4 +1,5 @@
-from reborn import log, send_message, edit_message_text
+from api import send_message, edit_message_text
+from reborn import log
 import threading
 import time
 import sched
