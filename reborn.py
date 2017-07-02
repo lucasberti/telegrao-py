@@ -5,6 +5,9 @@ import importlib
 import logging
 import re
 import config
+import threading
+import traceback
+import sys
 from time import gmtime
 from calendar import timegm
 
@@ -99,7 +102,18 @@ def on_msg_received(msg):
 
             if plugin_match is not None and matches is not None:
                 loaded = importlib.import_module("plugins." + plugin_match)
-                loaded.on_msg_received(msg, matches)
+                try:
+                    loaded.on_msg_received(msg, matches)
+                except:
+                    # Hardcodando aviso de erro. Não serve pra prevenir.
+                    exc_type, exc_value, exc_traceback = sys.exc_info()
+
+                    printable = repr(traceback.format_exception(exc_type, exc_value, exc_traceback))
+
+                    for sudoer in config.config["sudoers"]:
+                        api.send_message(sudoer, "ME CAPOTARO AQUI PORRA \n\n" + printable)
+
+                    raise
 
     else:
         log("Mensagem não autorizada de " + msg["from"]["first_name"] + " (" + str(msg["from"]["id"]) + ")")
@@ -138,9 +152,19 @@ def start_longpoll():
                 most_recent = update["update_id"] + 1
 
 
+def start_plugins():
+    for match, plugin in config.plugins.items():
+        loaded = importlib.import_module("plugins." + plugin)
+
+        if hasattr(loaded, "run"):
+            thread = threading.Thread(target=loaded.run)
+            thread.start()
+
+
 def main():
     """ Entry point né porra. """
     log("Iniciando sessão")
+    start_plugins()
     start_longpoll()
 
 

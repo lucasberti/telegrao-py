@@ -12,6 +12,7 @@
         25919148
     ],
     "enabled_plugins": {
+        "^[!/]melenbra ([0-9]+d)?([0-9]+h)?([0-9]+m)?([0-9]+s)? (.+)$": "melenbra",
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
         "^[!/]wunder(?:@PintaoBot)?( (.*) (.*))?$": "wunder",
         "^[!/]plugins(?:@PintaoBot)?( (.*) (.*))?": "plugins",
