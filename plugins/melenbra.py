@@ -25,6 +25,21 @@ def save_reminders(reminders):
         json.dump(reminders, fp, indent=4)
 
 
+def list_reminders(chat):
+    chat = str(chat)
+    reminders = load_reminders()
+    msg = ""
+
+    reminders = reminders[chat]
+
+    for reminder in reminders:
+        futuretime = time.localtime(float(reminder))
+        msg += time.strftime("%d/%m/%y as %H:%M:%S", futuretime) + ": " + reminders[reminder] + "\n"
+
+    return msg
+
+
+
 def add_reminder(chat, date, message):
     chat = str(chat)
     reminders = load_reminders()
@@ -83,6 +98,12 @@ def on_msg_received(msg, matches):
     if seconds is not None:
         seconds = seconds.replace("s", "")
         timeoffset += int(seconds)
+
+    if days is None and hours is None and minutes is None and seconds is None and message is None:
+        response = list_reminders(chat)
+        send_message(chat, response)
+        return
+
 
     futuretime = time.time() + timeoffset
 

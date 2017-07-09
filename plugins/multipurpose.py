@@ -9,6 +9,7 @@ from api import send_message
 from random import randint
 import re
 import plugins.stats as stats
+import plugins.ed as ed
 
 
 def on_msg_received(msg, matches):
@@ -16,6 +17,7 @@ def on_msg_received(msg, matches):
     text = msg["text"]
 
     stats.do_statistics(msg)
+    ed.run_ed(msg)
 
     # Precisamos manter log de todas as mensagens pro /xet e /wordcloud
     with open("data/log.txt", "a", encoding='utf-8') as f:

@@ -83,7 +83,7 @@ def msg_matches(msg_text):
         match = pattern.search(msg_text)
 
         if match:
-            if plugin != "multipurpose":
+            if query != "^(.*)$":
                 log("MATCH! Plugin: " + plugin)
 
             return plugin, match
