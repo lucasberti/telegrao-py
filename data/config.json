@@ -12,7 +12,6 @@
         25919148
     ],
     "enabled_plugins": {
-        "^[!/]hltv(?:@PintaoBot)? (\\w+) ?(\\d+)?$": "hltv",
         "^[!/]melenbra(?:@PintaoBot)? ?([0-9]+d)?([0-9]+h)?([0-9]+m)?([0-9]+s)?(?: (.+))?$": "melenbra",
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
         "^[!/]wunder(?:@PintaoBot)?( (.*) (.*))?$": "wunder",
