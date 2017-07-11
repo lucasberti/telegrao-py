@@ -135,14 +135,16 @@ def on_scoreboard(*args):
     tr_players = entries["TERRORIST"]
     ct_players = entries["CT"]
 
-    for i in range(0, 5):
+    for i in range(0, len(tr_players)):
         tr_name = tr_players[i]["name"]
-        ct_name = ct_players[i]["name"]
 
         if tr_players[i]["alive"] == "True" and tr_name not in opt.alive_tr:
             opt.alive_tr.append(tr_name)
         elif tr_players[i]["alive"] == "False" and tr_name in opt.alive_tr:
             opt.alive_tr.remove(tr_name)
+
+    for i in range(0, len(ct_players)):
+        ct_name = ct_players[i]["name"]
 
         if ct_players[i]["alive"] == "True" and ct_name not in opt.alive_ct:
             opt.alive_ct.append(ct_name)
