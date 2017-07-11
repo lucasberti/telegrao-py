@@ -157,7 +157,7 @@ def start_plugins():
         loaded = importlib.import_module("plugins." + plugin)
 
         if hasattr(loaded, "run"):
-            thread = threading.Thread(target=loaded.run)
+            thread = threading.Thread(name=plugin, target=loaded.run)
             thread.start()
 
 

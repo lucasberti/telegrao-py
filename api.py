@@ -55,6 +55,17 @@ def edit_message_text(chat_id, msg_id, text, parse_mode="Markdown", reply_to_mes
     return response
 
 
+def delete_message(chat_id, msg_id):
+    url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/deleteMessage?"
+    url += "chat_id=" + str(chat_id) + "&"
+    url += "message_id=" + str(msg_id)
+
+    response = requests.get(url)
+    response = json.loads(response.content)
+
+    return response
+
+
 def send_photo(chat_id, photo_url, caption="", reply_to_message_id=0):
     """ reply_markup não é apenas ID, é uma array com opções. """
     url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendPhoto?"
