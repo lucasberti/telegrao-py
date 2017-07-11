@@ -193,6 +193,7 @@ def perform_exit():
 
     socketio.wait(seconds=1)
 
+    opt.clear_log_msg()
     opt.add_log_msg("ae carai to me desligano ta bom tchau")
     opt.update_log()
 
