@@ -53,7 +53,7 @@ def on_msg_received(msg, matches):
     match = pattern.search(text)
 
     if match:
-        send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas")
+        send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas @Garzarella")
 
 
     # calma

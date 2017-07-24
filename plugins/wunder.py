@@ -98,7 +98,7 @@ def generate_string(data):
 
     header = "EITA PORA a tenps em " + cityname + " eh d " + str(temp_c)
     header += " con uma sensasaosinha d " + str(feels_c) + "\n"
-    header += "a parti da estasao meteurolojics la em " + station + " em " + obs_time[6:] + "\n"
+    header += "a parti da estasao meteurolojics la em " + station + " em " + obs_time[5:] + "\n"
     header += "umanidade di " + humidity + "\n"
     header += "uns veto vino a " + str(wind_vel) + " narizes do retcha/h de " + wind_from + "\n"
     header += "atlamente la ta ó::::::: " + process_conditions(weather)

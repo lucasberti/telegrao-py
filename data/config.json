@@ -9,7 +9,8 @@
         80048195,
         85867003,
         10549434,
-        25919148
+        25919148,
+	123123862
     ],
     "enabled_plugins": {
         "^[!/]hltv(?:@PintaoBot)? (\\w+) ?(\\d+)?$": "hltv",
@@ -17,7 +18,7 @@
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
         "^[!/]wunder(?:@PintaoBot)?( (.*) (.*))?$": "wunder",
         "^[!/]plugins(?:@PintaoBot)?( (.*) (.*))?": "plugins",
-        "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)": "vamojoga",
+        "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)$": "vamojoga",
         "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
         "^(.*)$": "multipurpose"
     },
