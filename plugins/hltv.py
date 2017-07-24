@@ -50,11 +50,11 @@ class MessageHandler(object):
         self.log_msg = ""
 
     def update_log(self):
-        log("atualizando log...")
+        # log("atualizando log...")
         api.edit_message_text(self.chat_id, self.log_msg_id, self.log_msg, parse_mode="")
 
     def update_scoreboard(self):
-        log("atualizando scoreboard...")
+        # log("atualizando scoreboard...")
         api.edit_message_text(self.chat_id, self.scoreboard_msg_id, self.scoreboard_msg, parse_mode="")
 
 

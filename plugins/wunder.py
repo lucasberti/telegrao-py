@@ -96,12 +96,11 @@ def generate_string(data):
     footer  = ""
     now     = datetime.datetime.now()
 
-    header = "EITA PORA a tenps em " + cityname + " eh d " + str(temp_c)
-    header += " con uma sensasaosinha d " + str(feels_c) + "\n"
-    header += "a parti da estasao meteurolojics la em " + station + " em " + obs_time[5:] + "\n"
-    header += "umanidade di " + humidity + "\n"
-    header += "uns veto vino a " + str(wind_vel) + " narizes do retcha/h de " + wind_from + "\n"
-    header += "atlamente la ta ó::::::: " + process_conditions(weather)
+    header = "EITA PORA a tenps em {} eh d {} con uma sensasaosinha d {}\n".format(cityname, temp_c, feels_c)
+    header += "a parti da estasao meteurolojics la em {} em {}\n".format(station, obs_time[5:])
+    header += "umanidade di {}\n".format(humidity)
+    header += "uns veto vino a {} narizes do retcha/h de {}\n".format(wind_vel, wind_from)
+    header += "atlamente la ta ó::::::: {}".format(process_conditions(weather))
 
     # Se já é noite, pegue a previsão do dia seguinte. (index 0 é hoje, 1 é amanhã)
     if now.hour >= 18:
@@ -111,8 +110,8 @@ def generate_string(data):
         conditions      = process_conditions(forecast[1]["conditions"])
 
         footer = "\n\ni sera q vai chove amanh??????\n"
-        footer += conditions + " con una prporlbindade d presiispatasao d " + str(precipitation) + "\n"
-        footer += "másima d " + forecast_max + " minim d " + forecast_min
+        footer += "{} con una prporlbindade d presiispatasao d {}\n".format(conditions, precipitation)
+        footer += "másima d {} minim d {}".format(forecast_max , forecast_min)
     else:
         forecast_max    = forecast[0]["high"]["celsius"]
         forecast_min    = forecast[0]["low"]["celsius"]
@@ -120,8 +119,8 @@ def generate_string(data):
         conditions      = process_conditions(forecast[0]["conditions"])
 
         footer = "\n\ni sera q vai chove hj????\n"
-        footer += conditions + " con una prporlbindade d presiispatasao d " + str(precipitation) + "\n"
-        footer += "másima d " + forecast_max + " minim d " + forecast_min
+        footer += "{} con una prporlbindade d presiispatasao d {}\n".format(conditions, precipitation)
+        footer += "másima d {} minim d {}".format(forecast_max, forecast_min)
 
     return header + footer
 
