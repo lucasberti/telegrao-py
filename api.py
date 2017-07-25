@@ -98,3 +98,13 @@ def send_document(chat_id, document_url, caption="", reply_to_message_id=0):
     response = json.loads(response.content)
 
     return response
+
+def send_sticker(chat_id, sticker_id): 
+    url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendSticker?"
+    url += "chat_id=" + str(chat_id) + "&"
+    url += "sticker=" + sticker_id + "&"
+
+    response = requests.get(url)
+    response = json.loads(response.content)
+
+    return response

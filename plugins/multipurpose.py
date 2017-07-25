@@ -5,7 +5,7 @@
 
 # A maioria é um port bem rápido de https://github.com/lucasberti/telegrao/blob/master/plugins/taup.lua
 
-from api import send_message
+from api import send_message, send_sticker
 from random import randint
 import re
 import plugins.stats as stats
@@ -78,6 +78,15 @@ def on_msg_received(msg, matches):
 
     if match:
         send_message(chat, "youtube.com/watch?v=ZkwdNcrIbxs")
+
+
+    # rau
+    pattern = re.compile("^axasdas$")
+    match = pattern.search(text)
+
+    if match:
+        send_sticker(chat, "CAADBQADgAADDGCzCL91O-bq3xxEAg")
+        send_message(chat, "?")
 
 
     # rau
