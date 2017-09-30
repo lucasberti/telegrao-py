@@ -9,7 +9,7 @@ def requestGoogle(query):
     url = "https://www.googleapis.com/customsearch/v1?"
     url = url + "cx=006518944303354753471:um8whdniwke"
     url = url + "&searchType=image"
-    url = url + "&key=" + environ["googlekey"]
+    url = url + "&key=" + environ["GOOGLEKEY"]
 
     url = url + "&q=" + query
 

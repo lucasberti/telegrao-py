@@ -10,6 +10,7 @@
         85867003,
         10549434,
         25919148,
+        49681384,
 	123123862
     ],
     "enabled_plugins": {
@@ -21,6 +22,7 @@
         "^[!/]plugins(?:@PintaoBot)?( (.*) (.*))?": "plugins",
         "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)$": "vamojoga",
         "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
+        "^[!/]ts(?:@PintaoBot)?": "ts",
         "^(.*)$": "multipurpose"
     },
     "disabled_plugins": {},
