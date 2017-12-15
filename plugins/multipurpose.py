@@ -6,7 +6,7 @@
 # A maioria é um port bem rápido de https://github.com/lucasberti/telegrao/blob/master/plugins/taup.lua
 
 from api import send_message, send_sticker
-from random import randint
+from random import randint, choice
 import re
 import plugins.stats as stats
 import plugins.ed as ed
@@ -28,8 +28,14 @@ def on_msg_received(msg, matches):
     match = pattern.search(text)
 
     if match:
-        send_message(chat, "64.137.208.17")
+        send_message(chat, "198.211.102.201")
 
+    # /ultimavez
+    pattern = re.compile("^[!/]ultimavez$")
+    match = pattern.search(text)
+
+    if match:
+        send_message(chat, "hashtag ERVt21tByA")
 
     # /mps
     pattern = re.compile("^[!/]mps(?:@PintaoBot)?$")
@@ -53,7 +59,7 @@ def on_msg_received(msg, matches):
     match = pattern.search(text)
 
     if match:
-        send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas @Garzarella")
+        send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas @Garzarella @cravetz")
 
 
     # calma
@@ -79,19 +85,22 @@ def on_msg_received(msg, matches):
     if match:
         send_message(chat, "youtube.com/watch?v=ZkwdNcrIbxs")
 
-
-    # rau
-    pattern = re.compile("^axasdas$")
-    match = pattern.search(text)
-
-    if match:
-        send_sticker(chat, "CAADBQADgAADDGCzCL91O-bq3xxEAg")
-        send_message(chat, "?")
-
-
+ 
     # rau
     pattern = re.compile("^rau$")
     match = pattern.search(text)
 
     if match:
         send_message(chat, "meu pau no seu cu")
+
+
+    # axasdas
+    pattern = re.compile("^axasdas$")
+    match = pattern.search(text)
+
+    if match:
+        respostas = ["?", "lucas berti viado", "nunca fui sub do phantomlord", "caguei agua no trabalho"]
+
+        send_sticker(chat, "CAADBAAD6wADfrn7B7Y17rsYOjoeAg")
+        send_sticker(chat, "CAADBQADgAADDGCzCL91O-bq3xxEAg")
+        send_message(chat, choice(respostas))
