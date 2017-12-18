@@ -24,7 +24,7 @@
         "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)$": "vamojoga",
         "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
         "^[!/]ts(?:@PintaoBot)?": "ts",
-        "^[!/]xet(?:@PintaoBot)?": "markov",
+        "^[!/]xet(?:@PintaoBot)? ?(.*)?": "markov",
         "^(.*)$": "multipurpose"
     },
     "disabled_plugins": {},
