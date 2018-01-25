@@ -16,7 +16,6 @@
     ],
     "enabled_plugins": {
         "^[!/]steam(?:@PintaoBot)?$": "steam",
-        "^[!/]hltv(?:@PintaoBot)? (\\w+) ?(\\d+)?$": "hltv",
         "^[!/]melenbra(?:@PintaoBot)? ?([0-9]+d)?([0-9]+h)?([0-9]+m)?([0-9]+s)?(?: (.+))?$": "melenbra",
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
         "^[!/]wunder(?:@PintaoBot)?( (.*) (.*))?$": "wunder",
@@ -25,9 +24,12 @@
         "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
         "^[!/]ts(?:@PintaoBot)?": "ts",
         "^[!/]xet(?:@PintaoBot)? ?(.*)?": "markov",
+        "^[!/]echo(?:@PintaoBot)? (.*)$": "echo",
         "^(.*)$": "multipurpose"
     },
-    "disabled_plugins": {},
+    "disabled_plugins": {
+        "^[!/]hltv(?:@PintaoBot)? (\\w+) ?(\\d+)?$": "hltv"
+    },
     "callback_query_plugins": [
         "vamojoga"
     ]
