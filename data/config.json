@@ -12,16 +12,18 @@
         25919148,
         49681384,
 	16259040,
-	123123862
+	123123862,
+	180594627
     ],
     "enabled_plugins": {
         "^[!/]steam(?:@PintaoBot)?$": "steam",
         "^[!/]melenbra(?:@PintaoBot)? ?([0-9]+d)?([0-9]+h)?([0-9]+m)?([0-9]+s)?(?: (.+))?$": "melenbra",
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
-        "^[!/]wunder(?:@PintaoBot)?( (.*) (.*))?$": "wunder",
+        "^[!/]wunder(?:@PintaoBot)?$": "wunder",
         "^[!/]plugins(?:@PintaoBot)?( (.*) (.*))?": "plugins",
         "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)$": "vamojoga",
         "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
+        "^[!/]qqeisso(?:@PintaoBot)? (.*)": "qqeisso",
         "^[!/]ts(?:@PintaoBot)?": "ts",
         "^[!/]xet(?:@PintaoBot)? ?(.*)?": "markov",
         "^[!/]echo(?:@PintaoBot)? (.*)$": "echo",

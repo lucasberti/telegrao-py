@@ -21,9 +21,11 @@ def talk_to_ed(message):
     }
 
     strResponse = requests.post(url=strEndpoint, data=dictParams, headers=dictHeader)
-    strResponse = strResponse.content.decode("utf-8")
+    strResponse = strResponse.content.decode("utf-8")[:-1]
 
-    return strResponse[:-1]
+    strResponse = re.sub(r'<a href=(.*)\">', '', strResponse).replace("</a>", "") 
+
+    return strResponse
 
 def run_ed(msg):
     chat = msg["chat"]["id"]

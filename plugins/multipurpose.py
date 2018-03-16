@@ -6,7 +6,7 @@
 # A maioria é um port bem rápido de https://github.com/lucasberti/telegrao/blob/master/plugins/taup.lua
 
 from api import send_message, send_sticker
-from random import randint, choice
+from random import randint, choice, randrange
 import re
 import plugins.stats as stats
 import plugins.ed as ed
@@ -44,6 +44,12 @@ def on_msg_received(msg, matches):
     if match:
         send_message(chat, "ok to calculando aki q esistem " + str(randint(500, 10000)) + "/s por segundo de SUPER MAEMES NESNTE CHAT1")
 
+    # /dougscore
+    pattern = re.compile("^[!/]dougscore(?:@PintaoBot)?$")
+    match = pattern.search(text)
+
+    if match:
+        send_message(chat, "ok to calculando aki q o dougscore é " + str(randint(0, 100)))
 
     # /stats
     pattern = re.compile("^[!/]stats(?:@PintaoBot)?$")

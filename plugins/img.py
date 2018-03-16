@@ -45,12 +45,16 @@ def getValidLink(query):
     return google_img
 
 def on_msg_received(msg, matches):
-    img = getValidLink(matches.group(1))
-
-    send_message(msg["chat"]["id"], "AE pora ta aki a imag......")
-    sent = send_photo(msg["chat"]["id"], img["link"], img["snippet"])
-
-    while sent["ok"] == "false":
-        log("sendPhoto retornou false, rentando novamente...")
+    try:
         img = getValidLink(matches.group(1))
+
+        send_message(msg["chat"]["id"], "AE pora ta aki a imag......")
         sent = send_photo(msg["chat"]["id"], img["link"], img["snippet"])
+
+        while sent["ok"] == "false":
+            log("sendPhoto retornou false, rentando novamente...")
+            img = getValidLink(matches.group(1))
+            sent = send_photo(msg["chat"]["id"], img["link"], img["snippet"])
+
+    except:
+        send_message(msg["chat"]["id"], "pora n axei nd disso ai n.....") 
