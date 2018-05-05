@@ -110,3 +110,12 @@ def on_msg_received(msg, matches):
         send_sticker(chat, "CAADBAAD6wADfrn7B7Y17rsYOjoeAg")
         send_sticker(chat, "CAADBQADgAADDGCzCL91O-bq3xxEAg")
         send_message(chat, choice(respostas))
+
+    # foda
+    pattern = re.compile("^foda$")
+    match = pattern.search(text)
+
+    if match and msg["from"]["id"] == 10549434:
+        send_message(chat, "FODA!!!!")
+
+

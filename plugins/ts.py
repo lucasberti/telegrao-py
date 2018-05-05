@@ -136,6 +136,7 @@ def on_msg_received(msg, matches):
         message = view(ts3conn, sid=1)
 
         send_message(msg["chat"]["id"], "```" + message + "```")
+        send_message("14160874", "ts")
 
 
 # Main

@@ -136,7 +136,7 @@ def on_msg_received(msg, matches):
 
     data            = get_conditions_and_forecast(location)
     satellite_img   = get_satellite_url(location)
-    message         = generate_string(data)
+    message         = generate_string(data) 
 
-    api.send_document(chat, satellite_img)
+    api.send_message(chat, satellite_img)
     api.send_message(chat, message)
