@@ -24,6 +24,9 @@ class Voting:
     def number_going(self):
         return len(self.going)
 
+    def number_not_going(self):
+        return len(self.notgoing)
+
     def going_as_str(self):
         members = ""
 
@@ -35,12 +38,26 @@ class Voting:
 
         return members
 
+    def not_going_as_str(self):
+        members = ""
+
+        if self.number_not_going() == 0:
+            members = "ninggme"
+        else:
+            for user in self.notgoing:
+                members += "*" + user + "*\n"
+
+        return members
+
     def generate_str(self):
         str = ""
         str += "VAMO JOGA " + self.gamename.upper() + " CARAI VCSC TNE 3 MISNUTOS\n\n"
         str += "QUEM VAI::::\n"
+        str += self.going_as_str() + "\n\n"
+        str += "QUEM N VAI::::\n"
+        str += self.not_going_as_str()
 
-        return str + self.going_as_str()
+        return str
 
     def reset(self):
         self.active = False
@@ -49,6 +66,7 @@ class Voting:
         self.chatid = 0
         self.maxslots = 0
         self.going = []
+        self.notgoing = []
 
 
 voting = Voting()
@@ -100,21 +118,31 @@ def on_msg_received(msg, matches):
 
 def on_callback_query(msg):
     if started() and msg["message"]["message_id"] == voting.msg_id:
-        # se já está na votação...
-        if msg["from"]["first_name"] in voting.going:
+        user = msg["from"]["first_name"]
+
+        if user in voting.going: # se já está na votação...
             if msg["data"] == '1': # se estiver confirmando que vai de novo
-                log(msg["from"]["first_name"] + " tentando votar mais de uma vez")
-                #send_message(msg["message"]["chat"]["id"], msg["from"]["first_name"] + " vc ja vai porra n floda cacete")
+                log(user + " tentando votar mais de uma vez")
             elif msg["data"] == '0': # se estiver pedindo pra ser retirado da lista...
-                log("Removendo " + msg["from"]["first_name"] + " da votação...")
-                voting.going.remove(msg["from"]["first_name"])
-                edit_message_text(voting.chatid, voting.msg_id, voting.generate_str(), reply_markup=MARKUP)
+                log("Removendo " + user + " da votação...")
+                voting.going.remove(user)
+                voting.notgoing.append(user)
         else:
             if msg["data"] == '1':
-                log("Adicionando " + msg["from"]["first_name"] + " à votação...")
-                voting.going.append(msg["from"]["first_name"])
+                log("Adicionando " + user + " à votação...")
+                voting.going.append(user)
+
+                if user in voting.notgoing:
+                    voting.notgoing.remove(user)
 
                 if voting.number_going() == voting.maxslots:
                     finishVoting(1)
 
-                edit_message_text(voting.chatid, voting.msg_id, voting.generate_str(), reply_markup=MARKUP)
+            elif msg["data"] == '0':
+                log("Marcando que " + user + " não vai")
+                voting.notgoing.append(user)
+
+                if user in voting.going:
+                    voting.going.remove(user)
+
+        edit_message_text(voting.chatid, voting.msg_id, voting.generate_str(), reply_markup=MARKUP)

@@ -27,6 +27,7 @@
         "^[!/]ts(?:@PintaoBot)?": "ts",
         "^[!/]xet(?:@PintaoBot)? ?(.*)?": "markov",
         "^[!/]r6(?:@PintaoBot)? ?(.*)?": "r6",
+        "^[!/]escolhe(?:@PintaoBot)? (.*)$": "escolhe",
         "^[!/]echo(?:@PintaoBot)? (.*)$": "echo",
         "^(.*)$": "multipurpose"
     },

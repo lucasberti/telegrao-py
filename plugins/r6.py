@@ -6,6 +6,7 @@ PLAYERS = {
     14160874: "bertoncio",
     16631085: "beaea",
     85867003: "raulg0bbi",
+    52451934: "xthedgehog",
     10549434: "axasdas",
     123123862: "MeroFabio"
 }
@@ -19,7 +20,6 @@ def extract_overall_stats(payload):
         revives         = payload["revives"] or 0
         reinforcements  = payload["reinforcements_deployed"] or 0
         barricades      = payload["barricades_built"] or 0
-        steps           = payload["steps_moved"] or 0
         headshots       = payload["headshots"] or 0
         assists         = payload["assists"] or 0
     except Exception as e: 
@@ -28,7 +28,6 @@ def extract_overall_stats(payload):
     text += "revivel {} amicos\n".format(revives)
     text += "reforso {} pareds...\n".format(reinforcements)
     text += "barriko {} passajes\n".format(barricades)
-    text += "deu {} paços\n".format(steps)
     text += "deu {} headshovers\n".format(headshots)
     text += "fes {} asists\n\n".format(assists)
 
