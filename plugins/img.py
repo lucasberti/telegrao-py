@@ -1,4 +1,4 @@
-from api import send_photo, send_message
+from api import send_photo, send_message, send_chat_action
 from reborn import log
 import requests
 import json
@@ -45,16 +45,23 @@ def getValidLink(query):
     return google_img
 
 def on_msg_received(msg, matches):
+    chat = msg["chat"]["id"]
+
     try:
         img = getValidLink(matches.group(1))
 
-        send_message(msg["chat"]["id"], "AE pora ta aki a imag......")
-        sent = send_photo(msg["chat"]["id"], img["link"], img["snippet"])
+        link = img["link"]
+        snippet = img["snippet"]
+        caption_text = "[" + snippet + "](" + link + ")"
+
+        send_message(chat, "AE pora ta aki a imag......")
+        send_chat_action(chat, "upload_photo")
+        sent = send_photo(chat, link, caption_text)
 
         while sent["ok"] == "false":
             log("sendPhoto retornou false, rentando novamente...")
             img = getValidLink(matches.group(1))
-            sent = send_photo(msg["chat"]["id"], img["link"], img["snippet"])
+            sent = send_photo(chat, link, caption_text)
 
     except:
-        send_message(msg["chat"]["id"], "pora n axei nd disso ai n.....") 
+        send_message(chat, "pora n axei nd disso ai n.....") 

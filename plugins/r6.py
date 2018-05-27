@@ -1,4 +1,4 @@
-from api import send_message
+from api import send_message, send_chat_action
 import requests
 import json
 
@@ -136,7 +136,11 @@ def get_stats(player):
 
 
 def on_msg_received(msg, matches):
-    send_message(msg["chat"]["id"], "perai vamo ve....")
+    chat = msg["chat"]["id"]
+    user = msg["from"]["id"]
+
+    send_message(chat, "perai vamo ve....")
+    send_chat_action(chat, "typing")
 
     is_looking_for_operators = False
     player = None
@@ -145,13 +149,13 @@ def on_msg_received(msg, matches):
         if matches.group(1) == "op":
             is_looking_for_operators = True
 
-            if msg["from"]["id"] in PLAYERS:
-                player = PLAYERS[msg["from"]["id"]]
+            if user in PLAYERS:
+                player = PLAYERS[user]
         else:
             player = matches.group(1)
     else:
-        if msg["from"]["id"] in PLAYERS:
-            player = PLAYERS[msg["from"]["id"]]
+        if user in PLAYERS:
+            player = PLAYERS[user]
 
     if player is not None:
         if is_looking_for_operators:
@@ -163,4 +167,4 @@ def on_msg_received(msg, matches):
 
     print(stats)
 
-    send_message(msg["chat"]["id"], stats)
+    send_message(chat, stats)

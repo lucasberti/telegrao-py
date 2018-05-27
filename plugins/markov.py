@@ -1,9 +1,11 @@
-from api import send_message
+from api import send_message, send_chat_action
 import markovify
 
 def on_msg_received(msg, matches):
     
     chat = msg["chat"]["id"]
+
+    send_chat_action(chat, "typing")
 
     with open("/root/paitons/telegrao-py/data/log.txt") as f:
         model = markovify.NewlineText(f.read())

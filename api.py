@@ -74,6 +74,7 @@ def send_photo(chat_id, photo_url, caption="", reply_to_message_id=0):
 
     if caption:
         url += "caption=" + caption + "&"
+        url += "parse_mode=Markdown&"
     if reply_to_message_id:
         url += "reply_to_message_id=" + str(reply_to_message_id) + "&"
 
@@ -99,10 +100,22 @@ def send_document(chat_id, document_url, caption="", reply_to_message_id=0):
 
     return response
 
+
 def send_sticker(chat_id, sticker_id): 
     url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendSticker?"
     url += "chat_id=" + str(chat_id) + "&"
     url += "sticker=" + sticker_id + "&"
+
+    response = requests.get(url)
+    response = json.loads(response.content)
+
+    return response
+
+
+def send_chat_action(chat_id, action):
+    url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendChatAction?"
+    url += "chat_id=" + str(chat_id) + "&"
+    url += "action=" + action + "&"
 
     response = requests.get(url)
     response = json.loads(response.content)
