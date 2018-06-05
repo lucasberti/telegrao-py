@@ -23,7 +23,6 @@
         "^[!/]plugins(?:@PintaoBot)?( (.*) (.*))?": "plugins",
         "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)$": "vamojoga",
         "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
-        "^[!/]qqeisso(?:@PintaoBot)? (.*)": "qqeisso",
         "^[!/]ts(?:@PintaoBot)?": "ts",
         "^[!/]xet(?:@PintaoBot)? ?(.*)?": "markov",
         "^[!/]r6(?:@PintaoBot)? ?(.*)?": "r6",

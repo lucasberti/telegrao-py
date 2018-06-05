@@ -7,10 +7,14 @@
 
 from api import send_message, send_sticker
 from random import randint, choice, randrange
+import json
 import re
 import plugins.stats as stats
 import plugins.ed as ed
 
+emotes = {}
+
+stickers_loaded = False
 
 def on_msg_received(msg, matches):
     chat = msg["chat"]["id"]
@@ -22,6 +26,20 @@ def on_msg_received(msg, matches):
     # Precisamos manter log de todas as mensagens pro /xet e /wordcloud
     with open("data/log.txt", "a", encoding='utf-8') as f:
         f.write(text + "\n")
+
+
+    if not stickers_loaded:
+        try:
+            with open("data/emotes.json") as f:
+                emotes = json.load(f)
+        except Exception as e:
+            print(e)
+
+    for emote, sticker in emotes.items():
+        if emote in text:
+            send_sticker(chat, sticker)
+            break
+
 
     # /ip
     pattern = re.compile("^[!/]ip(?:@PintaoBot)?$")

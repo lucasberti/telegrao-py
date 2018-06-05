@@ -134,9 +134,14 @@ def on_msg_received(msg, matches):
         api.send_message(chat, "vei n sei qaltua cdd..... use */wunder add [estacao]* <<<------- botassua eksltaçao ali rs")
         return
 
-    data            = get_conditions_and_forecast(location)
-    satellite_img   = get_satellite_url(location)
-    message         = generate_string(data) 
+    try:
+        data            = get_conditions_and_forecast(location)
+        satellite_img   = get_satellite_url(location)
+        message         = generate_string(data) 
 
-    api.send_message(chat, satellite_img)
-    api.send_message(chat, message)
+        print("satellite url: " + satellite_img)
+
+        api.send_message(chat, satellite_img)
+        api.send_message(chat, message)
+    except:
+        api.send_message(chat, "ops deu pobreminha rsrsrs")
