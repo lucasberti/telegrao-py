@@ -11,9 +11,11 @@
         10549434,
         25919148,
         49681384,
-	16259040,
-	123123862,
-	180594627
+        16259040,
+        123123862,
+        180594627,
+        569341881,
+        299335806
     ],
     "enabled_plugins": {
         "^[!/]steam(?:@PintaoBot)?$": "steam",
@@ -26,8 +28,8 @@
         "^[!/]ts(?:@PintaoBot)?": "ts",
         "^[!/]xet(?:@PintaoBot)? ?(.*)?": "markov",
         "^[!/]r6(?:@PintaoBot)? ?(.*)?": "r6",
-        "^[!/]escolhe(?:@PintaoBot)? (.*)$": "escolhe",
         "^[!/]echo(?:@PintaoBot)? (.*)$": "echo",
+        "^[!/]escolhe(?:@PintaoBot)? (.*)$": "escolhe",
         "^(.*)$": "multipurpose"
     },
     "disabled_plugins": {

@@ -4,6 +4,7 @@ import datetime
 import json
 import requests
 import api
+import os
 
 gUrlConditions  = "http://api.wunderground.com/api/dbcee4e7c140bb2d/lang:BR/conditions/forecast/q/"
 gUrlSatellite   = "http://api.wunderground.com/api/dbcee4e7c140bb2d/animatedsatellite/q/"
@@ -140,8 +141,16 @@ def on_msg_received(msg, matches):
         message         = generate_string(data) 
 
         print("satellite url: " + satellite_img)
-
-        api.send_message(chat, satellite_img)
+ 
         api.send_message(chat, message)
+        
+        url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendAnimation?"
+        url += "chat_id=" + str(chat)
+
+        imagedata = requests.get(satellite_img).content
+        payload = {"animation": ('nuvens.gif', imagedata, 'image/gif')}
+
+        requests.post(url, files=payload)
+
     except:
         api.send_message(chat, "ops deu pobreminha rsrsrs")

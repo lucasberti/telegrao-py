@@ -75,11 +75,10 @@ def query_steam():
         else:
             message += "{} ta oflain afff\n".format(name)
 
-
     return message
 
 def on_msg_received(msg, matches):
     chat = msg["chat"]["id"]
     response = query_steam()
 
-    send_message(chat, response)
+    send_message(chat, response, parse_mode="")

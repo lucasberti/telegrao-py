@@ -79,7 +79,7 @@ def on_msg_received(msg, matches):
     minutes = matches.group(3)
     seconds = matches.group(4)
 
-    message = matches.group(5)
+    message = matches.group(5) or "auguna cosa"
 
     timeoffset = 0
 

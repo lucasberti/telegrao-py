@@ -11,6 +11,7 @@ import json
 import re
 import plugins.stats as stats
 import plugins.ed as ed
+import time
 
 emotes = {}
 
@@ -19,6 +20,7 @@ stickers_loaded = False
 def on_msg_received(msg, matches):
     chat = msg["chat"]["id"]
     text = msg["text"]
+    now = time.time()
 
     stats.do_statistics(msg)
     ed.run_ed(msg)
@@ -36,17 +38,17 @@ def on_msg_received(msg, matches):
             print(e)
 
     for emote, sticker in emotes.items():
-        if emote in text:
-            send_sticker(chat, sticker)
-            break
-
+        for word in text.split():
+            if word == emote:
+                send_sticker(chat, sticker)
+                break
 
     # /ip
     pattern = re.compile("^[!/]ip(?:@PintaoBot)?$")
     match = pattern.search(text)
 
     if match:
-        send_message(chat, "198.211.102.201")
+        send_message(chat, "167.99.230.113 ou ts.lucasberti.me")
 
     # /ultimavez
     pattern = re.compile("^[!/]ultimavez$")
@@ -83,7 +85,7 @@ def on_msg_received(msg, matches):
     match = pattern.search(text)
 
     if match:
-        send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas @Garzarella @cravetz")
+        send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas @Garzarella @cravetz @giovannovisk @Gbrlcrrts")
 
 
     # calma
@@ -136,4 +138,11 @@ def on_msg_received(msg, matches):
     if match and msg["from"]["id"] == 10549434:
         send_message(chat, "FODA!!!!")
 
+    pattern = re.compile("^(xis|x)$", re.IGNORECASE)
+    match = pattern.search(text)
 
+    if match:
+        respostas = ["no churrasco", "no trampo", "no metro", "no churras", "na rua", "no assento do cobrador", "no busão", "no bar", "na academia", "chegando"]
+
+        resposta = "to " + choice(respostas)
+        send_message(chat, resposta)

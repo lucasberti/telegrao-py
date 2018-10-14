@@ -51,12 +51,13 @@ def on_msg_received(msg, matches):
         img = getValidLink(matches.group(1))
 
         link = img["link"]
+        source = img["image"]["contextLink"]
         snippet = img["snippet"]
-        caption_text = "[" + snippet + "](" + link + ")"
+        caption_text = "[" + snippet + "](" + source + ")"
 
         send_message(chat, "AE pora ta aki a imag......")
         send_chat_action(chat, "upload_photo")
-        sent = send_photo(chat, link, caption_text)
+        sent = send_photo(chat, link, caption_text, msg["message_id"])
 
         while sent["ok"] == "false":
             log("sendPhoto retornou false, rentando novamente...")

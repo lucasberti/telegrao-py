@@ -8,7 +8,9 @@ PLAYERS = {
     85867003: "raulg0bbi",
     52451934: "xthedgehog",
     10549434: "axasdas",
-    123123862: "MeroFabio"
+    123123862: "MeroFabio",
+    569341881: "burnovisk",
+    299335806: "springl3s"
 }
 
 
