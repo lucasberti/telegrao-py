@@ -112,6 +112,17 @@ def send_sticker(chat_id, sticker_id):
     return response
 
 
+def send_voice(chat_id, voice_id): 
+    url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendvoice?"
+    url += "chat_id=" + str(chat_id) + "&"
+    url += "voice=" + voice_id + "&"
+
+    response = requests.get(url)
+    response = json.loads(response.content)
+
+    return response
+
+
 def send_chat_action(chat_id, action):
     url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendChatAction?"
     url += "chat_id=" + str(chat_id) + "&"

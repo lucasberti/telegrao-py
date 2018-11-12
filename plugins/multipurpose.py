@@ -5,7 +5,7 @@
 
 # A maioria é um port bem rápido de https://github.com/lucasberti/telegrao/blob/master/plugins/taup.lua
 
-from api import send_message, send_sticker
+from api import send_message, send_sticker, send_voice
 from random import randint, choice, randrange
 import json
 import re
@@ -43,6 +43,7 @@ def on_msg_received(msg, matches):
                 send_sticker(chat, sticker)
                 break
 
+
     # /ip
     pattern = re.compile("^[!/]ip(?:@PintaoBot)?$")
     match = pattern.search(text)
@@ -50,12 +51,6 @@ def on_msg_received(msg, matches):
     if match:
         send_message(chat, "167.99.230.113 ou ts.lucasberti.me")
 
-    # /ultimavez
-    pattern = re.compile("^[!/]ultimavez$")
-    match = pattern.search(text)
-
-    if match:
-        send_message(chat, "hashtag ERVt21tByA")
 
     # /mps
     pattern = re.compile("^[!/]mps(?:@PintaoBot)?$")
@@ -64,12 +59,14 @@ def on_msg_received(msg, matches):
     if match:
         send_message(chat, "ok to calculando aki q esistem " + str(randint(500, 10000)) + "/s por segundo de SUPER MAEMES NESNTE CHAT1")
 
+
     # /dougscore
     pattern = re.compile("^[!/]dougscore(?:@PintaoBot)?$")
     match = pattern.search(text)
 
     if match:
         send_message(chat, "ok to calculando aki q o dougscore é " + str(randint(0, 100)))
+
 
     # /stats
     pattern = re.compile("^[!/]stats(?:@PintaoBot)?$")
@@ -86,6 +83,14 @@ def on_msg_received(msg, matches):
 
     if match:
         send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas @Garzarella @cravetz @giovannovisk @Gbrlcrrts")
+
+
+    # @doteiros
+    pattern = re.compile("(?:@dota|@doteiros)")
+    match = pattern.search(text)
+
+    if match:
+        send_message(chat, "@getulhao @rauzao @axasdas @Garzarella @giovannovisk @Gbrlcrrts\n\n[clica pra abrir....](lucasberti.me/dota)")
 
 
     # calma
@@ -120,6 +125,14 @@ def on_msg_received(msg, matches):
         send_message(chat, "meu pau no seu cu")
 
 
+    # retcha
+    pattern = re.compile("^retcha$")
+    match = pattern.search(text)
+
+    if match:
+        send_voice(chat, "AwADAQADOgAD980QR0CE3Nf-ksRuAg")
+
+
     # axasdas
     pattern = re.compile("^axasdas$")
     match = pattern.search(text)
@@ -142,7 +155,7 @@ def on_msg_received(msg, matches):
     match = pattern.search(text)
 
     if match:
-        respostas = ["no churrasco", "no trampo", "no metro", "no churras", "na rua", "no assento do cobrador", "no busão", "no bar", "na academia", "chegando"]
+        respostas = ["no churrasco", "no trampo", "no metro", "no churras", "na rua", "no assento do cobrador", "no busão", "no bar", "na academia", "na praia", "chegando"]
 
         resposta = "to " + choice(respostas)
         send_message(chat, resposta)

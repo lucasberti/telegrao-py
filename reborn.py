@@ -79,7 +79,7 @@ def is_authorized(msg):
 
 def msg_matches(msg_text):
     for query, plugin in config.plugins.items():
-        pattern = re.compile(query)
+        pattern = re.compile(query, flags=re.IGNORECASE)
         match = pattern.search(msg_text)
 
         if match:
