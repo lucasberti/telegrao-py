@@ -1,31 +1,40 @@
 import api
 import requests
 import re
+import urllib.parse
 
 def talk_to_ed(message):
-    strEndpoint = "http://www.ed.conpet.gov.br/mod_perl/bot_gateway.cgi"
+    ed_endpoint = "https://in.bot/api/bot_gateway"
 
-    dictParams = {
-        "server": "0.0.0.0:8085",
-        "charset_post": "utf-8",
-        "charset": "utf-8",
-        "pure": 1,
-        "js": 0,
-        "tst": 1,
-        "msg": message
+    params = {
+        "url_bot_gateway": "https://in.bot/api/bot_gateway",
+        "is_ajax": 1,
+        "bot_id": 133,
+        "server": "no_host:no_port",
+        "bot_admin": "",
+        "no_log": 0,
+        "json": 1,
+        "user_phrase": f"{urllib.parse.quote_plus(message)}",
+        "payload": "",
+        "gender": "",
+        "session_id": "ce16c6a1-d977-4f75-bff5-4a0dd0edcdc8",
+        "user_id": "833abe72-e57a-4678-bc87-6e3e635f95ce",
+        "username": "",
+        "bot_token": "AGI-v01-EDo42vk8",
+        "bot_server_type": "",
+        "is_test": 0,
+        "channel": "web",
+        "setvar": "",
+        "request_layout": 0
     }
 
-    dictHeader = {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Content-Length": str(len(dictParams))
-    }
-
-    strResponse = requests.post(url=strEndpoint, data=dictParams, headers=dictHeader)
-    strResponse = strResponse.content.decode("utf-8")[:-1]
-
-    strResponse = re.sub(r'<a href=(.*)\">', '', strResponse).replace("</a>", "") 
-
-    return strResponse
+    try:
+        response = requests.post(url=ed_endpoint, data=params).json()["resp"]
+        response = re.sub(r'<a href=(.*)\">', '', response).replace("</a>", "")
+        
+        return response
+    except:
+        return "ops o ed moreu........"
 
 def run_ed(msg):
     chat = msg["chat"]["id"]
