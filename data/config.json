@@ -1,5 +1,5 @@
 {
-    "sudoers": [
+    "admins": [
         14160874
     ],
     "authorized_users": [
@@ -37,5 +37,6 @@
     },
     "callback_query_plugins": [
         "vamojoga"
-    ]
+    ],
+    "is_whitelist_enabled": false
 }

@@ -74,7 +74,10 @@ def is_sudoer(id):
 
 
 def is_authorized(msg):
-    return msg["from"]["id"] in config.config["authorized_users"]
+    if config.config["is_whitelist_enabled"] is False:
+        return True
+    else:
+        return msg._from.id in config.config["authorized_users"]
 
 
 def msg_matches(msg_text):
@@ -101,8 +104,8 @@ def on_msg_received(msg):
             plugin_match, matches = msg_matches(msg["text"])
 
             if plugin_match is not None and matches is not None:
-                loaded = importlib.import_module("plugins." + plugin_match)
                 try:
+                    loaded = importlib.import_module("plugins." + plugin_match)
                     loaded.on_msg_received(msg, matches)
                 except:
                     # Hardcodando aviso de erro. Não serve pra prevenir.
@@ -114,7 +117,6 @@ def on_msg_received(msg):
                         api.send_message(sudoer, "ME CAPOTARO AQUI PORRA \n\n" + printable)
 
                     raise
-
     else:
         log("Mensagem não autorizada de " + msg["from"]["first_name"] + " (" + str(msg["from"]["id"]) + ")")
 
@@ -127,29 +129,33 @@ def on_msg_edited(msg):
 def on_callback_query(msg):
     """ Callback que define o que acontecerá quando um dado de um InlineKeyboardButton for recebido. """
     for plugin in config.config["callback_query_plugins"]:
-        loaded = importlib.import_module("plugins." + plugin)
-        loaded.on_callback_query(msg)
+        try:
+            loaded = importlib.import_module("plugins." + plugin)
+            loaded.on_callback_query(msg)
+        except:
+            print("Module " + plugin + " not found")
 
 
 def start_longpoll():
     """ Inicia longpolling do get_updates. """
+    print('iniciando long')
     most_recent = 0
 
     while True:
-        updates = api.get_updates(offset=most_recent)
+        for update in api.get_updates(offset=most_recent):
+            if update is not None:
+                now = timegm(gmtime())
 
-        if updates is not None:
-            for update in updates:
-                if "message" in update and timegm(gmtime()) - update["message"]["date"] < 10:
-                    on_msg_received(update["message"])
-                elif "edited_message" in update and timegm(gmtime()) - update["edited_message"]["date"] < 10:
-                    on_msg_edited(update["edited_message"])
-                elif "callback_query" in update:
-                    on_callback_query(update["callback_query"])
+                if update.text is not None and now - update.message.date < 10:
+                    on_msg_received(update.message)
+                # elif "edited_message" in update and now - update["edited_message"]["date"] < 10:
+                #     on_msg_edited(update["edited_message"])
+                # elif "callback_query" in update:
+                #     on_callback_query(update["callback_query"])
                 else:
                     log("Mensagem muito antiga ou desconhecida; ignorando.")
 
-                most_recent = update["update_id"] + 1
+                most_recent = update.update_id + 1
 
 
 def start_plugins():
