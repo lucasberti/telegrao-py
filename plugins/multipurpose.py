@@ -9,6 +9,10 @@ from api import send_message, send_sticker, send_voice
 from random import randint, choice, randrange
 import json
 import re
+from PIL import Image
+import requests
+import os
+from io import BytesIO
 import plugins.stats as stats
 import plugins.ed as ed
 import time
@@ -42,7 +46,6 @@ def on_msg_received(msg, matches):
             if word == emote:
                 send_sticker(chat, sticker)
                 break
-
 
     # /ip
     pattern = re.compile("^[!/]ip(?:@PintaoBot)?$")
@@ -82,7 +85,7 @@ def on_msg_received(msg, matches):
     match = pattern.search(text)
 
     if match:
-        send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas @Garzarella @cravetz @giovannovisk @Gbrlcrrts")
+        send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas @Garzarella @cravetz @giovannovisk @Gbrlcrrts @geysariri")
 
 
     # @doteiros
@@ -90,7 +93,7 @@ def on_msg_received(msg, matches):
     match = pattern.search(text)
 
     if match:
-        send_message(chat, "@getulhao @rauzao @axasdas @Garzarella @giovannovisk @Gbrlcrrts\n\n[clica pra abrir....](lucasberti.me/dota)")
+        send_message(chat, "@getulhao @rauzao @axasdas @Garzarella @giovannovisk @Gbrlcrrts @Geysariri\n\n[clica pra abrir....](lucasberti.me/dota)")
 
 
     # calma
@@ -115,8 +118,34 @@ def on_msg_received(msg, matches):
 
     if match:
         send_message(chat, "youtube.com/watch?v=ZkwdNcrIbxs")
+        send_voice(chat, "AwADAQADRAADgBaoRzTp0hx182Z7Ag")
+       
 
- 
+    # bracket
+    pattern = re.compile("^[!/]brackets?(?:@PintaoBot)?$")
+    match = pattern.search(text)
+
+    if match:
+        send_message(chat, "opa masé cllro pepria ai q jajenvio........")
+
+        url_screenshot = "http://api.screenshotlayer.com/api/capture?access_key=6159278b9290544bda694a44c3b38524&url=https://challonge.com/wwe4f8di&viewport=1440x1024&fullpage=1&force=1"
+        url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendPhoto?"
+        url += "chat_id=" + str(chat)
+
+        image = Image.open(BytesIO(requests.get(url_screenshot).content))
+
+        result = BytesIO()
+
+        image.crop((115, 555, 1280, 1060)).save(result, "png")
+
+        result.seek(0)
+            
+        payload = {"photo": ('camp.png', result.read(), 'image/png')}
+        response = requests.post(url, files=payload)
+
+        print(response.content)
+
+
     # rau
     pattern = re.compile("^rau$")
     match = pattern.search(text)
@@ -131,6 +160,22 @@ def on_msg_received(msg, matches):
 
     if match:
         send_voice(chat, "AwADAQADOgAD980QR0CE3Nf-ksRuAg")
+
+
+    # xischupano
+    pattern = re.compile("^xischupano$")
+    match = pattern.search(text)
+
+    if match:
+        send_voice(chat, "AwADAQADEAADK3zfBeb564h2rREyAg")
+
+
+    # retchagemeno 
+    pattern = re.compile("^retchagemeno$")
+    match = pattern.search(text)
+
+    if match:
+        send_voice(chat, "AwADAQADDgADK3zfBXTMW4j5cqevAg")
 
 
     # axasdas

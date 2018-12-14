@@ -1,6 +1,12 @@
 from operator import itemgetter
 from os import path
 import json
+import sqlite3
+import time
+
+db = sqlite3.connect("basezinha.db")
+c = db.cursor()
+c.execute("CREATE TABLE IF NOT EXISTS Tabelinha(msg_id INT, chat_id INT, user_id INT, date DATETIME, user_name TEXT, message TEXT)")
 
 def return_statistics(chat):
     chat = str(chat)
@@ -37,6 +43,22 @@ def do_statistics(msg):
     chat_id = str(msg["chat"]["id"])
     from_id = str(msg["from"]["id"])
     name = msg["from"]["first_name"]
+    username = msg["from"]["username"] or None
+    msg_id = msg["message_id"]
+    text = msg["text"] or None
+    timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
+
+    if text is not None:
+
+        t = (msg_id, chat_id, from_id, timestamp, username, text)
+
+        try:
+            with db:
+                c.execute("INSERT INTO Tabelinha VALUES (?, ?, ?, ?, ?, ?)", t)
+        except Exception as e:
+            print(f"Probleminha no banquinho: {e}")
+
+
     stats = {}
 
     # Abre e lê o arquivo JSON

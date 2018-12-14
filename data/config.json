@@ -15,7 +15,8 @@
         123123862,
         180594627,
         569341881,
-        299335806
+        299335806,
+	123299051
     ],
     "enabled_plugins": {
         "^[!/]steam(?:@PintaoBot)?$": "steam",
@@ -30,6 +31,7 @@
         "^[!/]r6(?:@PintaoBot)? ?(.*)?": "r6",
         "^[!/]echo(?:@PintaoBot)? (.*)$": "echo",
         "^[!/]escolhe(?:@PintaoBot)? (.*)$": "escolhe",
+        "^[!/]calc(?:@PintaoBot)? (.*)$": "calc",
         "^(.*)$": "multipurpose"
     },
     "disabled_plugins": {
