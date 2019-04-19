@@ -13,7 +13,9 @@ def get_random_item(text):
         end = int(match.group(2))
 
         return f"hummmm vamo ve..... {random.randint(start, end)}"
-    
+    if "berti" in text.replace(" ", ""):
+        return "a velho caralboca"
+
     text = re.split(",+| ou ", text)
 
     if len(text) > 1:

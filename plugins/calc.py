@@ -6,7 +6,7 @@ def calculate(input):
     try:
         input = urllib.parse.quote_plus(input)
 
-        url = f"http://api.mathjs.org/v1/?expr={input}"
+        url = f"http://api.mathjs.org/v4/?expr={input}"
 
         response = requests.get(url).text
     except:

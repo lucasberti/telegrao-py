@@ -5,7 +5,7 @@
 
 # A maioria é um port bem rápido de https://github.com/lucasberti/telegrao/blob/master/plugins/taup.lua
 
-from api import send_message, send_sticker, send_voice
+from api import send_message, send_sticker, send_document, send_photo, send_voice
 from random import randint, choice, randrange
 import json
 import re
@@ -47,6 +47,47 @@ def on_msg_received(msg, matches):
                 send_sticker(chat, sticker)
                 break
 
+    if chat == -1001299644323:
+        with open("/var/www/html/xet.txt", "a", encoding='utf-8') as f:
+            f.write(f"{msg['from']['username']}: {text}\n")
+
+
+    # /get
+    if text.startswith("/get"):
+        key = text[5:]
+        try:
+            with open("data/values.json", "r") as f:
+                values = json.load(f)
+        except Exception as e:
+            print(e)
+
+        if chat in values:
+            if key in values[chat]:
+                send_message(chat, values[chat][key])
+
+    # /set
+    if text.startswith("!set"):
+        text = text[5:]
+        k, v = text.split(", ")
+        
+        try:
+            with open("data/values.json", "w") as f:
+                values = json.load(f)
+
+                if chat not in values:
+                    values[chat] = {}
+                
+                values[chat][k] = v
+
+                send_message(chat, f"ok sauvei aq q {k} = {v}")
+                print(f"Salvando {k} = {v}")
+                
+                f.seek(0)
+                json.dump(values, f)
+        except Exception as e:
+            print(e)       
+
+
     # /ip
     pattern = re.compile("^[!/]ip(?:@PintaoBot)?$")
     match = pattern.search(text)
@@ -85,15 +126,26 @@ def on_msg_received(msg, matches):
     match = pattern.search(text)
 
     if match:
-        send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas @Garzarella @cravetz @giovannovisk @Gbrlcrrts @geysariri")
+        send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas @Garzarella @cravetz @giovannovisk @Gbrlcrrts @geysariri @bedabul @romuloneves")
 
 
     # @doteiros
-    pattern = re.compile("(?:@dota|@doteiros)")
+#    pattern = re.compile("(?:@dota|@doteiros)")
+#    match = pattern.search(text)
+#
+#    if match:
+#        send_message(chat, "@getulhao @rauzao @axasdas @giovannovisk @Geysariri @cravetz @bedabul\n\n[clica pra abrir....](lucasberti.me/dota)")
+
+    if text == "?":
+        send_message(chat, "?")
+
+    # @apex
+    pattern = re.compile("@apex")
     match = pattern.search(text)
 
     if match:
-        send_message(chat, "@getulhao @rauzao @axasdas @Garzarella @giovannovisk @Gbrlcrrts @Geysariri\n\n[clica pra abrir....](lucasberti.me/dota)")
+        send_message(chat, "@Berti @beaea @axasdas @Garzarella @giovannovisk @Gbrlcrrts @cravetz @bedabul @rauzao")
+
 
 
     # calma
@@ -111,6 +163,12 @@ def on_msg_received(msg, matches):
     if match:
         send_message(chat, "SIM, TÔ AQUI PORA")
 
+    # invite
+    pattern = re.compile("^[!/]invite(?:@PintaoBot)?$")
+    match = pattern.search(text)
+
+    if match:
+        send_message(chat, "https://t.me/joinchat/ANgT6gCyGpD6aGUzKfnk3w")
 
     # celso
     pattern = re.compile("^[!/]historia(?:@PintaoBot)?$")
@@ -146,6 +204,16 @@ def on_msg_received(msg, matches):
         print(response.content)
 
 
+    # burn
+    pattern = re.compile("^burn$")
+    match = pattern.search(text)
+
+    if match:
+        send_voice(chat, "AwADAQADPwADdMhpRu8AAd9hgtCNFwI")
+        send_voice(chat, "AwADAQADQAADdMhpRusXWyvZVk-5Ag")
+
+
+
     # rau
     pattern = re.compile("^rau$")
     match = pattern.search(text)
@@ -178,6 +246,16 @@ def on_msg_received(msg, matches):
         send_voice(chat, "AwADAQADDgADK3zfBXTMW4j5cqevAg")
 
 
+    # geta
+    pattern = re.compile("^geta$")
+    match = pattern.search(text)
+
+    if match:
+        send_sticker(chat, "CAADAQADRAADl6BoRbfstbst5IT7Ag")
+        send_document(chat, "CQADAQADfwADx7KpRxytpuyVqkkJAg")
+        send_photo(chat, "https://i.imgur.com/O5Ihe8x.png")
+
+
     # axasdas
     pattern = re.compile("^axasdas$")
     match = pattern.search(text)
@@ -185,9 +263,8 @@ def on_msg_received(msg, matches):
     if match:
         respostas = ["?", "lucas berti viado", "nunca fui sub do phantomlord", "caguei agua no trabalho"]
 
-        send_sticker(chat, "CAADBAAD6wADfrn7B7Y17rsYOjoeAg")
-        send_sticker(chat, "CAADBQADgAADDGCzCL91O-bq3xxEAg")
         send_message(chat, choice(respostas))
+        send_photo(chat, "https://i.imgur.com/CoJjJ1P.png")
 
     # foda
     pattern = re.compile("^foda$")

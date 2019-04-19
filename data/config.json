@@ -16,26 +16,34 @@
         180594627,
         569341881,
         299335806,
-	123299051
+        123299051,
+        77547673,
+        35072014
     ],
     "enabled_plugins": {
         "^[!/]steam(?:@PintaoBot)?$": "steam",
         "^[!/]melenbra(?:@PintaoBot)? ?([0-9]+d)?([0-9]+h)?([0-9]+m)?([0-9]+s)?(?: (.+))?$": "melenbra",
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
-        "^[!/]wunder(?:@PintaoBot)?$": "wunder",
         "^[!/]plugins(?:@PintaoBot)?( (.*) (.*))?": "plugins",
         "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)$": "vamojoga",
         "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
         "^[!/]ts(?:@PintaoBot)?": "ts",
         "^[!/]xet(?:@PintaoBot)? ?(.*)?": "markov",
         "^[!/]r6(?:@PintaoBot)? ?(.*)?": "r6",
+        "^[!/]apex(?:@PintaoBot)? ?(.*)?": "apex",
         "^[!/]echo(?:@PintaoBot)? (.*)$": "echo",
-        "^[!/]escolhe(?:@PintaoBot)? (.*)$": "escolhe",
         "^[!/]calc(?:@PintaoBot)? (.*)$": "calc",
+        "^[!/]correios(?:@PintaoBot)? (.*)$": "correios",
+        "^[!/]escolhe(?:@PintaoBot)? (.*)$": "escolhe",
+        "^[!/]50(?:@PintaoBot)?": "fifty",
+        "^[!/]treta(?:@PintaoBot)? ?(.*)?": "treta",
+        "^[!/]meme(?:@PintaoBot)? (.*), (.*), (.*)$": "meme",
+        "^([!/][gs]et)(?:@PintaoBot)? ?(.*)?": "set",
         "^(.*)$": "multipurpose"
     },
     "disabled_plugins": {
-        "^[!/]hltv(?:@PintaoBot)? (\\w+) ?(\\d+)?$": "hltv"
+        "^[!/]hltv(?:@PintaoBot)? (\\w+) ?(\\d+)?$": "hltv",
+        "^[!/]wunder(?:@PintaoBot)? ?(.*)?$": "wunder"
     },
     "callback_query_plugins": [
         "vamojoga"

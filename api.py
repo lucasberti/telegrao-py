@@ -20,11 +20,13 @@ def get_updates(offset=0, timeout=60):
         return None
 
 
-def send_message(chat_id, text, parse_mode="Markdown", reply_to_message_id="", reply_markup=""):
+def send_message(chat_id, text, parse_mode="Markdown", reply_to_message_id="", reply_markup="", disable_web_page_preview="false"):
     """ reply_markup não é apenas ID, é uma array com opções. """
+    
     url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendMessage?"
     url += "chat_id=" + str(chat_id) + "&"
     url += "text=" + text + "&"
+    url += "disable_web_page_preview=" + disable_web_page_preview + "&" 
     url += "parse_mode=" + parse_mode + "&"
     if reply_to_message_id:
         url += "reply_to_message_id=" + str(reply_to_message_id) + "&"
@@ -33,6 +35,8 @@ def send_message(chat_id, text, parse_mode="Markdown", reply_to_message_id="", r
 
     response = requests.get(url)
     response = json.loads(response.content)
+
+    print(response)
 
     return response
 
