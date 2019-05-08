@@ -51,7 +51,7 @@ def on_msg_received(msg, matches):
         try:
             if content:
                 item, value = content.split(", ")
-                save_item(item.trim(), value)
+                save_item(item.strip(), value)
 
                 print(f"{item} = {value}")
 
