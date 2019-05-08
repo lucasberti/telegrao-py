@@ -92,9 +92,6 @@ def on_msg_received(msg, matches):
     },
     "^xischupano$": {
         "voice": ["AwADAQADEAADK3zfBeb564h2rREyAg"]
-    },
-    "@todos": {
-        "text": ["@giovannicardoso"]
     }
 }
 
