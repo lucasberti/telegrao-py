@@ -77,7 +77,7 @@ def on_msg_received(msg, matches):
         "document": ["CQADAQADfwADx7KpRxytpuyVqkkJAg"],
         "photo": ["https://i.imgur.com/O5Ihe8x.png"]
     },
-    "^boto fé|adiciono fé|acrescento fé|ponho fé|introduzo fé|coloco fé|insiro fé|meto fé|somo fé|agrego fé|incorporo fé|aplico fé|incluo fé|atribuo fé|aplico fé$": {
+    "^(?:boto|adiciono|acrescento|ponho|introduzo|coloco|insiro|meto|somo|agrego|incorporo|aplico|incluo|atribuo|atiro|arrumo|posiciono|instalo|estabeleço) fé$": {
         "text": ["fé colocada com sucesso"]
     },
     "^rau$": {
