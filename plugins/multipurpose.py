@@ -7,6 +7,7 @@
 
 from api import send_message, send_sticker, send_document, send_photo, send_voice
 from random import randint, choice, randrange
+from datetime import datetime
 import json
 import re
 from PIL import Image
@@ -18,8 +19,11 @@ import plugins.ed as ed
 import time
 
 emotes = {}
+arrobas = {}
 
 stickers_loaded = False
+arrobas_loaded = False
+
 
 def on_msg_received(msg, matches):
     chat = msg["chat"]["id"]
@@ -29,9 +33,79 @@ def on_msg_received(msg, matches):
     stats.do_statistics(msg)
     ed.run_ed(msg)
 
+    dicionario = {
+    "^[!/]ip(?:@PintaoBot)?$": {
+        "text": ["167.99.230.113 ou ts.lucasberti.me"]
+    },
+    "^[!/]mps(?:@PintaoBot)?$": {
+        "text": [f"ok to calculando aki q esistem {str(randint(500, 10000))}/s por segundo de SUPER MAEMES NESNTE CHAT1"]
+    },
+    "^[!/]dougscore(?:@PintaoBot)?$": {
+        "text": [f"ok to calculando aki q o dougscore é {str(randint(0, 100))}"]
+    },
+    "^[!/]stats(?:@PintaoBot)?$": {
+        "text": [stats.return_statistics(chat)]
+    },
+    "^[!/]cartola(?:@PintaoBot)?$": {
+        "text": ["-50 | -20 | -15 | -10 | -5 | 0 | +100"]
+    },
+    "^[!/]historia(?:@PintaoBot)?$": {
+        "text": ["youtube.com/watch?v=ZkwdNcrIbxs"],
+        "voice": ["AwADAQADRAADgBaoRzTp0hx182Z7Ag", "AwADAQADTwADRojZRSmcrD6Nylp7Ag"]
+    },
+    "^\?$": {
+        "text": ["?"]
+    },
+    "^calma$": {
+        "text": ["ok esto mais calmo obrigada"]
+    },
+    "^vc esta ai$": {
+        "text": ["SIM, TÔ AQUI PORA"]
+    },
+    "^indignada$": {
+        "voice": ["AwADAQADVwADMWFARkEqR2T39LDpAg"]
+    },
+    "^burn$": {
+        "voice": ["AwADAQADPwADdMhpRu8AAd9hgtCNFwI", "AwADAQADQAADdMhpRusXWyvZVk-5Ag"]
+    },
+    "^axasdas$": {
+        "text": [choice(["?", "!escolhe berti lixo ou berti top", "nunca fui sub do phantomlord"])],
+        "sticker": ["CAADAQADOwADaXQpRqZjRHmRgc2XAg"]
+    },
+    "^geta$": {
+        "sticker": ["CAADAQADRAADl6BoRbfstbst5IT7Ag"],
+        "document": ["CQADAQADfwADx7KpRxytpuyVqkkJAg"],
+        "photo": ["https://i.imgur.com/O5Ihe8x.png"]
+    },
+    "^boto fé$": {
+        "text": ["fé colocada com sucesso"]
+    },
+    "^rau$": {
+        "text": ["meu pau no seu cu"],
+        "voice": ["AwADAQADOgAD980QR0CE3Nf-ksRuAg"]
+    },
+    "^retcha$": {
+        "voice": ["AwADAQADOgAD980QR0CE3Nf-ksRuAg"]
+    },
+    "^retchagemeno$": {
+        "voice": ["AwADAQADDgADK3zfBXTMW4j5cqevAg"]
+    },
+    "^xischupano$": {
+        "voice": ["AwADAQADEAADK3zfBeb564h2rREyAg"]
+    },
+    "@todos": {
+        "text": ["@giovannicardoso"]
+    }
+}
+
+
     # Precisamos manter log de todas as mensagens pro /xet e /wordcloud
     with open("data/log.txt", "a", encoding='utf-8') as f:
         f.write(text + "\n")
+
+    if chat == -1001299644323:
+        with open("/var/www/html/xet.txt", "a", encoding='utf-8') as f:
+            f.write(f"{msg['from']['username']}: {text}\n")
 
 
     if not stickers_loaded:
@@ -47,137 +121,43 @@ def on_msg_received(msg, matches):
                 send_sticker(chat, sticker)
                 break
 
-    if chat == -1001299644323:
-        with open("/var/www/html/xet.txt", "a", encoding='utf-8') as f:
-            f.write(f"{msg['from']['username']}: {text}\n")
 
-
-    # /get
-    if text.startswith("/get"):
-        key = text[5:]
+    if not arrobas_loaded:
         try:
-            with open("data/values.json", "r") as f:
-                values = json.load(f)
+            with open("data/arrobas.json") as f:
+                arrobas = json.load(f)
         except Exception as e:
             print(e)
 
-        if chat in values:
-            if key in values[chat]:
-                send_message(chat, values[chat][key])
-
-    # /set
-    if text.startswith("!set"):
-        text = text[5:]
-        k, v = text.split(", ")
-        
-        try:
-            with open("data/values.json", "w") as f:
-                values = json.load(f)
-
-                if chat not in values:
-                    values[chat] = {}
-                
-                values[chat][k] = v
-
-                send_message(chat, f"ok sauvei aq q {k} = {v}")
-                print(f"Salvando {k} = {v}")
-                
-                f.seek(0)
-                json.dump(values, f)
-        except Exception as e:
-            print(e)       
+    for arroba in arrobas.keys():
+        if arroba in text:
+            send_message(chat, " ".join(arrobas[arroba]))
 
 
-    # /ip
-    pattern = re.compile("^[!/]ip(?:@PintaoBot)?$")
-    match = pattern.search(text)
+    for pat in dicionario:
+        pattern = re.compile(pat)
+        match = pattern.search(text)
 
-    if match:
-        send_message(chat, "167.99.230.113 ou ts.lucasberti.me")
+        if match:
+            if "text" in dicionario[pat].keys():
+                for entry in dicionario[pat]["text"]:
+                    send_message(chat, entry)
 
+            if "photo" in dicionario[pat].keys():
+                for entry in dicionario[pat]["photo"]:
+                    send_photo(chat, entry)
 
-    # /mps
-    pattern = re.compile("^[!/]mps(?:@PintaoBot)?$")
-    match = pattern.search(text)
+            if "voice" in dicionario[pat].keys():
+                for entry in dicionario[pat]["voice"]:
+                    send_voice(chat, entry)
 
-    if match:
-        send_message(chat, "ok to calculando aki q esistem " + str(randint(500, 10000)) + "/s por segundo de SUPER MAEMES NESNTE CHAT1")
+            if "sticker" in dicionario[pat].keys():
+                for entry in dicionario[pat]["sticker"]:
+                    send_sticker(chat, entry)
 
-
-    # /dougscore
-    pattern = re.compile("^[!/]dougscore(?:@PintaoBot)?$")
-    match = pattern.search(text)
-
-    if match:
-        send_message(chat, "ok to calculando aki q o dougscore é " + str(randint(0, 100)))
-
-
-    # /stats
-    pattern = re.compile("^[!/]stats(?:@PintaoBot)?$")
-    match = pattern.search(text)
-
-    if match:
-        result = stats.return_statistics(chat)
-        send_message(chat, result)
-
-
-    # @todos
-    pattern = re.compile("(?:@todos|@todomundo)")
-    match = pattern.search(text)
-
-    if match:
-        send_message(chat, "@berti @beaea @getulhao @rauzao @xisteaga @axasdas @Garzarella @cravetz @giovannovisk @Gbrlcrrts @geysariri @bedabul @romuloneves")
-
-
-    # @doteiros
-#    pattern = re.compile("(?:@dota|@doteiros)")
-#    match = pattern.search(text)
-#
-#    if match:
-#        send_message(chat, "@getulhao @rauzao @axasdas @giovannovisk @Geysariri @cravetz @bedabul\n\n[clica pra abrir....](lucasberti.me/dota)")
-
-    if text == "?":
-        send_message(chat, "?")
-
-    # @apex
-    pattern = re.compile("@apex")
-    match = pattern.search(text)
-
-    if match:
-        send_message(chat, "@Berti @beaea @axasdas @Garzarella @giovannovisk @Gbrlcrrts @cravetz @bedabul @rauzao")
-
-
-
-    # calma
-    pattern = re.compile("^calma$")
-    match = pattern.search(text)
-
-    if match:
-        send_message(chat, "ok esto mais calmo obrigada")
-
-
-    # vc esta ai
-    pattern = re.compile("^vc esta ai$")
-    match = pattern.search(text)
-
-    if match:
-        send_message(chat, "SIM, TÔ AQUI PORA")
-
-    # invite
-    pattern = re.compile("^[!/]invite(?:@PintaoBot)?$")
-    match = pattern.search(text)
-
-    if match:
-        send_message(chat, "https://t.me/joinchat/ANgT6gCyGpD6aGUzKfnk3w")
-
-    # celso
-    pattern = re.compile("^[!/]historia(?:@PintaoBot)?$")
-    match = pattern.search(text)
-
-    if match:
-        send_message(chat, "youtube.com/watch?v=ZkwdNcrIbxs")
-        send_voice(chat, "AwADAQADRAADgBaoRzTp0hx182Z7Ag")
-       
+            if "document" in dicionario[pat].keys():
+                for entry in dicionario[pat]["document"]:
+                    send_document(chat, entry)
 
     # bracket
     pattern = re.compile("^[!/]brackets?(?:@PintaoBot)?$")
@@ -204,68 +184,6 @@ def on_msg_received(msg, matches):
         print(response.content)
 
 
-    # burn
-    pattern = re.compile("^burn$")
-    match = pattern.search(text)
-
-    if match:
-        send_voice(chat, "AwADAQADPwADdMhpRu8AAd9hgtCNFwI")
-        send_voice(chat, "AwADAQADQAADdMhpRusXWyvZVk-5Ag")
-
-
-
-    # rau
-    pattern = re.compile("^rau$")
-    match = pattern.search(text)
-
-    if match:
-        send_message(chat, "meu pau no seu cu")
-
-
-    # retcha
-    pattern = re.compile("^retcha$")
-    match = pattern.search(text)
-
-    if match:
-        send_voice(chat, "AwADAQADOgAD980QR0CE3Nf-ksRuAg")
-
-
-    # xischupano
-    pattern = re.compile("^xischupano$")
-    match = pattern.search(text)
-
-    if match:
-        send_voice(chat, "AwADAQADEAADK3zfBeb564h2rREyAg")
-
-
-    # retchagemeno 
-    pattern = re.compile("^retchagemeno$")
-    match = pattern.search(text)
-
-    if match:
-        send_voice(chat, "AwADAQADDgADK3zfBXTMW4j5cqevAg")
-
-
-    # geta
-    pattern = re.compile("^geta$")
-    match = pattern.search(text)
-
-    if match:
-        send_sticker(chat, "CAADAQADRAADl6BoRbfstbst5IT7Ag")
-        send_document(chat, "CQADAQADfwADx7KpRxytpuyVqkkJAg")
-        send_photo(chat, "https://i.imgur.com/O5Ihe8x.png")
-
-
-    # axasdas
-    pattern = re.compile("^axasdas$")
-    match = pattern.search(text)
-
-    if match:
-        respostas = ["?", "lucas berti viado", "nunca fui sub do phantomlord", "caguei agua no trabalho"]
-
-        send_message(chat, choice(respostas))
-        send_photo(chat, "https://i.imgur.com/CoJjJ1P.png")
-
     # foda
     pattern = re.compile("^foda$")
     match = pattern.search(text)
@@ -273,6 +191,19 @@ def on_msg_received(msg, matches):
     if match and msg["from"]["id"] == 10549434:
         send_message(chat, "FODA!!!!")
 
+
+    # encontro
+    pattern = re.compile("^[!/]encontro$")
+    match = pattern.search(text)
+
+    if match:
+        encontro = datetime.fromtimestamp(1562900400)
+        delta = encontro - datetime.now()
+
+        send_message(chat, f"fautão {delta.days} dias pro encontronrn!!!!!!!")
+
+
+    # x
     pattern = re.compile("^(xis|x)$", re.IGNORECASE)
     match = pattern.search(text)
 

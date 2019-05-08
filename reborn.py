@@ -57,7 +57,7 @@ def log(msg):
         log_str = ""
         log_str += msg["from"]["first_name"] + " enviou " + message_type + " "
 
-        if origin == "group":
+        if "group" in origin:
             log_str += "em \"" + msg["chat"]["title"] + "\""
         elif origin == "private":
             log_str += "em PRIVADO"
@@ -79,7 +79,7 @@ def is_authorized(msg):
 
 def msg_matches(msg_text):
     for query, plugin in config.plugins.items():
-        pattern = re.compile(query, flags=re.IGNORECASE)
+        pattern = re.compile(query, flags=re.IGNORECASE|re.MULTILINE)
         match = pattern.search(msg_text)
 
         if match:

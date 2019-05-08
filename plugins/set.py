@@ -48,17 +48,23 @@ def on_msg_received(msg, matches):
     content = matches.group(2)
 
     if not is_get:
-        if content:
-            item, value = content.split(", ")
-            save_item(item, value)
+        try:
+            if content:
+                item, value = content.split(", ")
+                save_item(item.trim(), value)
 
-            send_message(chat, f"ok sauvei aq q {item} = {value}")
-        else:
-            send_message(chat, "a veloh vc precisiasa m e falala qqq vc ke grava.....")
+                print(f"{item} = {value}")
+
+                send_message(chat, f"ok sauvei aq q {item} = {value}", parse_mode="")
+            else:
+                send_message(chat, "a veloh vc precisiasa m e falala qqq vc ke grava.....")
+        except Exception as e:
+            print(f"{e}")
+            send_message(chat, "pora n é assim q usa carai pora sifude")
     else:
         if content:
             text = get_item(content)
-            send_message(chat, text)
+            send_message(chat, text, parse_mode="")
         else:
             for item in get_all_items(): 
                 send_message(chat, item, parse_mode="")
