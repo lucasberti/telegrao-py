@@ -190,7 +190,7 @@ def on_msg_received(msg, matches):
     match = pattern.search(text)
 
     if match:
-    verbo = match.groups(1)
+        verbo = match.group(1)
 
     if verbo == "boto":
         send_message(chat, "fé botada com sucesso")
@@ -230,8 +230,8 @@ def on_msg_received(msg, matches):
         send_message(chat, "fé instalada com sucesso")
     elif verbo == "estabeleço":
         send_message(chat, "fé estabelecida com sucesso")
-    else
-         send_message(chat, "eh muinto pra min naum consigo faser isso com a fé")                    
+    else:
+        send_message(chat, "eh muinto pra min naum consigo faser isso com a fé")                    
                     
     # encontro
     pattern = re.compile("^[!/]encontro$")
