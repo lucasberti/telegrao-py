@@ -77,9 +77,6 @@ def on_msg_received(msg, matches):
         "document": ["CQADAQADfwADx7KpRxytpuyVqkkJAg"],
         "photo": ["https://i.imgur.com/O5Ihe8x.png"]
     },
-    "^(?:boto|adiciono|acrescento|ponho|introduzo|coloco|insiro|meto|somo|agrego|incorporo|aplico|incluo|atribuo|atiro|arrumo|posiciono|instalo|estabeleço) fé$": {
-        "text": ["fé colocada com sucesso"]
-    },
     "^rau$": {
         "text": ["meu pau no seu cu"],
         "voice": ["AwADAQADOgAD980QR0CE3Nf-ksRuAg"]
@@ -188,7 +185,40 @@ def on_msg_received(msg, matches):
     if match and msg["from"]["id"] == 10549434:
         send_message(chat, "FODA!!!!")
 
+    # fé
+    pattern = re.compile("(.*) fé$")
+    match = pattern.search(text)
 
+    if match:
+        verbo = match.group(1)
+        
+        dicio = {
+            "boto": "botada",
+            "adiciono": "adicionada",
+            "acrescento": "acrescentada",
+            "ponho": "posta",
+            "introduzo": "introduzida",
+            "coloco": "colocada",
+            "insiro": "inserida",
+            "meto": "metida",
+            "somo": "somada",
+            "agrego": "agregada",
+            "incorporo": "incorporada",
+            "aplico": "aplicada",        
+            "incluo": "incluída",
+            "atribuo": "atribuída",
+            "atiro": "atirada",
+            "arrumo": "arrumada",
+            "posiciono": "posicionada",
+            "instalo": "instalada",
+            "estabeleço": "estabelecida"        
+        }
+
+        if verbo in dicio:
+            send_message(chat, f"fé {dicio[verbo]} com sucesso")
+        else:
+            send_message(chat, "eh muinto pra min naum consigo faser isso com a fé")                         
+                    
     # encontro
     pattern = re.compile("^[!/]encontro$")
     match = pattern.search(text)
