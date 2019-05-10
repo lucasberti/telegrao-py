@@ -77,9 +77,6 @@ def on_msg_received(msg, matches):
         "document": ["CQADAQADfwADx7KpRxytpuyVqkkJAg"],
         "photo": ["https://i.imgur.com/O5Ihe8x.png"]
     },
-    "^(?:boto|adiciono|acrescento|ponho|introduzo|coloco|insiro|meto|somo|agrego|incorporo|aplico|incluo|atribuo|atiro|arrumo|posiciono|instalo|estabeleço) fé$": {
-        "text": ["fé colocada com sucesso"]
-    },
     "^rau$": {
         "text": ["meu pau no seu cu"],
         "voice": ["AwADAQADOgAD980QR0CE3Nf-ksRuAg"]
@@ -188,7 +185,54 @@ def on_msg_received(msg, matches):
     if match and msg["from"]["id"] == 10549434:
         send_message(chat, "FODA!!!!")
 
+    # fé
+    pattern = re.compile("(.*) fé$")
+    match = pattern.search(text)
 
+    if match:
+    verbo = match.groups(1)
+
+    if verbo == "boto":
+        send_message(chat, "fé botada com sucesso")
+    elif verbo == "adiciono":
+        send_message(chat, "fé adicionada com sucesso")
+    elif verbo == "acrescento":
+        send_message(chat, "fé acrescentada com sucesso")
+    elif verbo == "ponho":
+        send_message(chat, "fé posta com sucesso")
+    elif verbo == "introduzo":
+        send_message(chat, "fé introduzida com sucesso")
+    elif verbo == "coloco":
+        send_message(chat, "fé colocada com sucesso")
+    elif verbo == "insiro":
+        send_message(chat, "fé inserida com sucesso")
+    elif verbo == "meto":
+        send_message(chat, "fé metida com sucesso")
+    elif verbo == "somo":
+        send_message(chat, "fé somada com sucesso")
+    elif verbo == "agrego":
+        send_message(chat, "fé agregada com sucesso")
+    elif verbo == "incorporo":
+        send_message(chat, "fé incorporada com sucesso")
+    elif verbo == "aplico":
+        send_message(chat, "fé aplicada com sucesso")
+    elif verbo == "incluo":
+        send_message(chat, "fé incluída com sucesso")
+    elif verbo == "atribuo":
+        send_message(chat, "fé atribuida com sucesso")
+    elif verbo == "atiro":
+        send_message(chat, "fé atirada com sucesso")
+    elif verbo == "arrumo":
+        send_message(chat, "fé arrumada com sucesso")
+    elif verbo == "posiciono":
+        send_message(chat, "fé posicionada com sucesso")
+    elif verbo == "instalo":
+        send_message(chat, "fé instalada com sucesso")
+    elif verbo == "estabeleço":
+        send_message(chat, "fé estabelecida com sucesso")
+    else
+         send_message(chat, "eh muinto pra min naum consigo faser isso com a fé")                    
+                    
     # encontro
     pattern = re.compile("^[!/]encontro$")
     match = pattern.search(text)
