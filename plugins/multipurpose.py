@@ -219,7 +219,7 @@ def on_msg_received(msg, matches):
             with open("data/fesdepositadas.txt", "r+") as f:
                 fes = int(f.readline())
                 f.seek(0)
-                f.write(str(numero+1))
+                f.write(str(fes+1))
                 send_message(chat, f"fé nº {fes} {dicio[verbo]} com sucesso")    
         else:
             send_message(chat, "eh muinto pra min naum consigo faser isso com a fé")                         
