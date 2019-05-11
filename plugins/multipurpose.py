@@ -53,11 +53,6 @@ def on_msg_received(msg, matches):
         "text": ["youtube.com/watch?v=ZkwdNcrIbxs"],
         "voice": ["AwADAQADRAADgBaoRzTp0hx182Z7Ag", "AwADAQADTwADRojZRSmcrD6Nylp7Ag"]
     },
-    "^[!/]fes$": {
-        with open("data/fes.txt", "r") as f:
-            fes = int(f.readline())
-            "text": [f"{str(fes)} fés colocadas"]        
-    },
     "^\?$": {
         "text": ["?"]
     },
@@ -222,10 +217,10 @@ def on_msg_received(msg, matches):
         if verbo in dicio:
             send_message(chat, f"fé {dicio[verbo]} com sucesso")
             with open("data/teste.txt", "r+") as f:
-                numero = int(f.readline())
+                fes = int(f.readline())
                 f.seek(0)
                 f.write(str(numero+1))
-                print(numero)        
+                send_message(chat, f"fé nº {fes} {dicio[verbo]} com sucesso")    
         else:
             send_message(chat, "eh muinto pra min naum consigo faser isso com a fé")                         
                     
