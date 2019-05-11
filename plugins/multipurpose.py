@@ -216,7 +216,7 @@ def on_msg_received(msg, matches):
 
         if verbo in dicio:
             send_message(chat, f"fé {dicio[verbo]} com sucesso")
-            with open("data/teste.txt", "r+") as f:
+            with open("data/fesdepositadas.txt", "r+") as f:
                 fes = int(f.readline())
                 f.seek(0)
                 f.write(str(numero+1))
