@@ -190,7 +190,7 @@ def on_msg_received(msg, matches):
     match = pattern.search(text)
 
     if match:
-        verbo = match.group(1)
+        verbo = match.group(1).lower()
         
         dicio = {
             "boto": "botada",
