@@ -186,7 +186,7 @@ def on_msg_received(msg, matches):
         send_message(chat, "FODA!!!!")
 
     # fé
-    pattern = re.compile("(.*) fé$")
+    pattern = re.compile("(.*) fé$", re.IGNORECASE)
     match = pattern.search(text)
 
     if match:
