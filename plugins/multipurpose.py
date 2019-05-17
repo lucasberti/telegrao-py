@@ -186,11 +186,12 @@ def on_msg_received(msg, matches):
         send_message(chat, "FODA!!!!")
 
     # fé
-    pattern = re.compile("(.*) fé$", re.IGNORECASE)
+    pattern = re.compile("(.*) fé(.*)", re.IGNORECASE)
     match = pattern.search(text)
 
     if match:
         verbo = match.group(1).lower()
+        duvida = match.group(2)
         
         dicio = {
             "boto": "botada",
@@ -215,11 +216,14 @@ def on_msg_received(msg, matches):
         }
 
         if verbo in dicio:
-            with open("data/fesdepositadas.txt", "r+") as f:
-                fes = int(f.readline())
-                f.seek(0)
-                f.write(str(fes+1))
-                send_message(chat, f"fé nº {fes} {dicio[verbo]} com sucesso")    
+            if "?" in duvida:
+                send_message(chat, "naum deposito fé se vose estiver com duvida")
+            else:
+                with open("data/fesdepositadas.txt", "r+") as f:
+                    fes = int(f.readline())
+                    f.seek(0)
+                    f.write(str(fes+1))
+                    send_message(chat, f"fé nº {fes} {dicio[verbo]} com sucesso")   
         else:
             send_message(chat, "eh muinto pra min naum consigo faser isso com a fé")                         
                     
