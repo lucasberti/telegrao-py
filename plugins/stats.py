@@ -43,7 +43,7 @@ def do_statistics(msg):
     chat_id = str(msg["chat"]["id"])
     from_id = str(msg["from"]["id"])
     name = msg["from"]["first_name"]
-    username = msg["from"]["username"] or None
+    username = msg["from"]["username"] if "username" in msg["from"] else None
     msg_id = msg["message_id"]
     text = msg["text"] or None
     timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
