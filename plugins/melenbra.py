@@ -79,7 +79,7 @@ def on_msg_received(msg, matches):
     minutes = matches.group(3)
     seconds = matches.group(4)
 
-    message = matches.group(5) or "auguna cosa"
+    message = matches.group(5)
 
     timeoffset = 0
 
@@ -104,6 +104,8 @@ def on_msg_received(msg, matches):
         send_message(chat, response)
         return
 
+    if message is None:
+        message = "auguna cosa"
 
     futuretime = time.time() + timeoffset
 

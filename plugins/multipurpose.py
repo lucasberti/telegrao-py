@@ -33,6 +33,11 @@ def on_msg_received(msg, matches):
     stats.do_statistics(msg)
     ed.run_ed(msg)
 
+    if "reply_to_message" in msg:
+        if msg["reply_to_message"]["from"]["id"] == 98532395:
+            send_message(chat, ed.talk_to_ed(text))
+
+
     dicionario = {
     "^[!/]ip(?:@PintaoBot)?$": {
         "text": ["167.99.230.113 ou ts.lucasberti.me"]
@@ -61,6 +66,12 @@ def on_msg_received(msg, matches):
     },
     "^vc esta ai$": {
         "text": ["SIM, TÔ AQUI PORA"]
+    },
+    "(?:bora|vamo) um turb": {
+        "text": ["vamo", "to discord"]
+    },
+    "to disco": {
+        "text": ["tbm"]
     },
     "^indignada$": {
         "voice": ["AwADAQADVwADMWFARkEqR2T39LDpAg"]
@@ -97,7 +108,7 @@ def on_msg_received(msg, matches):
     with open("data/log.txt", "a", encoding='utf-8') as f:
         f.write(text + "\n")
 
-    if chat == -1001299644323:
+    if chat == -1001479444301:
         with open("/var/www/html/xet.txt", "a", encoding='utf-8') as f:
             f.write(f"{msg['from']['username']}: {text}\n")
 
@@ -230,9 +241,14 @@ def on_msg_received(msg, matches):
 
     if match:
         encontro = datetime.fromtimestamp(1562900400)
-        delta = encontro - datetime.now()
+        delta = datetime.now() - encontro
 
-        send_message(chat, f"fautão {delta.days} dias pro encontronrn!!!!!!!")
+        days = delta.days
+        hours = int(delta.seconds / 3600)
+        minutes = int(delta.seconds % 3600 / 60)
+        seconds = delta.seconds % 60
+    
+        send_message(chat, f"ja fasen {days} dias {hours} oras {minutes} menudos {seconds} scundos dsd o grnd dia eeu nen tavala :((")
 
 
     # x
