@@ -127,8 +127,8 @@ def on_msg_received(msg, matches):
         if arroba in text:
             send_message(chat, " ".join(arrobas[arroba]))
             if "@giovannicardoso" in arrobas[arroba]:
-                    send_message(chat, "@giovannicardoso")
-
+                send_message(chat, "@giovannicardoso") 
+                    
     for pat in dicionario:
         pattern = re.compile(pat)
         match = pattern.search(text)
