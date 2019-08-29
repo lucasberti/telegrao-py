@@ -84,19 +84,19 @@ def on_msg_received(msg, matches):
     timeoffset = 0
 
     if days is not None:
-        days = days.replace("d", "")
+        days = days.lower().replace("d", "")
         timeoffset += 86400 * int(days)
 
     if hours is not None:
-        hours = hours.replace("h", "")
+        hours = hours.lower().replace("h", "")
         timeoffset += 3600 * int(hours)
 
     if minutes is not None:
-        minutes = minutes.replace("m", "")
+        minutes = minutes.lower().replace("m", "")
         timeoffset += 60 * int(minutes)
 
     if seconds is not None:
-        seconds = seconds.replace("s", "")
+        seconds = seconds.lower().replace("s", "")
         timeoffset += int(seconds)
 
     if days is None and hours is None and minutes is None and seconds is None and message is None:
