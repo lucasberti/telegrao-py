@@ -29,7 +29,4 @@ def on_msg_received(msg, matches):
     user = msg["from"]["id"]
     text = matches.group(1)
 
-    if user == 10549434:
-        send_message(chat, "axasdas vc n")
-    else:
-        send_message(chat, get_random_item(text))
+    send_message(chat, get_random_item(text))

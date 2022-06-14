@@ -1,6 +1,8 @@
 import json
 import time
 import sched
+import dateparser
+import datetime
 
 from api import send_message
 
@@ -74,47 +76,36 @@ def check_time():
 def on_msg_received(msg, matches):
     chat = msg["chat"]["id"]
 
-    days    = matches.group(1)
-    hours   = matches.group(2)
-    minutes = matches.group(3)
-    seconds = matches.group(4)
+    futuretime = matches.group(1)
+    message = matches.group(2)
 
-    message = matches.group(5)
+    print("future", futuretime, "message", message)
 
     timeoffset = 0
-
-    if days is not None:
-        days = days.lower().replace("d", "")
-        timeoffset += 86400 * int(days)
-
-    if hours is not None:
-        hours = hours.lower().replace("h", "")
-        timeoffset += 3600 * int(hours)
-
-    if minutes is not None:
-        minutes = minutes.lower().replace("m", "")
-        timeoffset += 60 * int(minutes)
-
-    if seconds is not None:
-        seconds = seconds.lower().replace("s", "")
-        timeoffset += int(seconds)
-
-    if days is None and hours is None and minutes is None and seconds is None and message is None:
+    if futuretime is None and "list" in message:
         response = list_reminders(chat)
         send_message(chat, response)
         return
 
-    if message is None:
-        message = "auguna cosa"
+    if message is not None and futuretime is None:
+        send_message(chat, "o vei n tendi n ve teuformato ai....")
+        return
 
-    futuretime = time.time() + timeoffset
+    future = dateparser.parse(futuretime, settings={'PREFER_DATES_FROM': 'future'})
+
+    if future is not None and future < datetime.datetime.now():
+        future = dateparser.parse("em " + futuretime)
+
+    if future is None:
+        send_message(chat, "o vehlilo netendi esa dat ai ~~~n......")
+        return
 
     if "username" in msg["from"]:
         message += " blz @" + msg["from"]["username"]
 
-    add_reminder(chat, futuretime, message)
+    add_reminder(chat, future.timestamp(), message)
 
-    futuretime = time.localtime(futuretime)
+    futuretime = time.localtime(future.timestamp())
 
     response = "belesinhaaaaa vo lenbra dia " + time.strftime("%d/%m/%y as %H:%M:%S", futuretime) + " sobr \"" + message + "\""
     send_message(chat, response)

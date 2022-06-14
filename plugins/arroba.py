@@ -28,7 +28,7 @@ def save_arroba(arroba, username, chat):
 
 def on_msg_received(msg, matches):
     chat = msg["chat"]["id"]
-    arroba = "@" + matches.group(1)
+    arroba = "@" + matches.group(1).replace("@", "")
 
     if "username" in msg["from"].keys():
         save_arroba(arroba, "@" + msg["from"]["username"], chat)

@@ -6,8 +6,8 @@ import requests
 import api
 import os
 
-gUrlConditions  = "http://api.wunderground.com/api/dbcee4e7c140bb2d/conditions/q/"
-gUrlSatellite   = "http://api.wunderground.com/api/dbcee4e7c140bb2d/animatedsatellite/q/"
+base_url        = "https://api.weather.com/v2/pws/observations/current"
+conditions_url  = "https://api.weather.com/v3/wx/observations/current" # só pra pegar o texto de current
 
 
 def load_locations():
@@ -39,32 +39,44 @@ def resolve_location(user_id):
         return None
 
 
-def get_conditions_and_forecast(place):
-    url = gUrlConditions
-    url += place + ".json"
+def get_additional_info(info):
+    geocode = str(info["lat"])[:7] + "," + str(info["lon"])[:7]
+    
+    params = {
+        "apiKey": "6532d6454b8aa370768e63d6ba5a832e",
+        "units": "m",
+        "geocode": geocode,
+        "language": "pt-BR",
+        "format": "json"
+    }
 
-    print("Conditions", url)
+    return requests.get(conditions_url, params=params).json()
 
-    response = requests.get(url)
 
-    print("Content", response.content)
+def get_current_conditions(place):
+    params = {
+        "apiKey": "6532d6454b8aa370768e63d6ba5a832e",
+        "units": "m",
+        "format": "json"
+    }
 
-    response = json.loads(response.content)
+    if len(place) == 4:
+        params['icaoCode'] = place
+        params['language'] = "pt-BR"
+        response = requests.get(conditions_url, params=params).json()
+    else:
+        params['stationId'] = place
+        response = requests.get(base_url, params=params).json()["observations"][0]
 
-    print(response)
     return response
-
-
-def get_satellite_url(place):
-    return gUrlSatellite + place + ".gif?basemap=1&timelabel=1&timelabel.y=10&num=5&delay=50&radius=500&radunits=km&borders=1&key=sat_ir4"
 
 
 def process_conditions(conditions):
     conditions_dict = {
         "": "pora n sei n da pra ve",
         "Bruma": "VEI TA TD BRAMCO",
-        "Céu Limpo": "LINPIN LINPJIN",
-        "Céu Encoberto": "ceu coberto con 1 endredonm",
+        "Limpo": "LINPIN LINPJIN",
+        "Encoberto": "ceu coberto con 1 endredonm",
         "Chuva": "i vai chove em",
         "Chuva Fraca": "una chuvinia lvevina",
         "Chuviscos Fracos": "una chuvinia fraquinia hummmmmmmmm",
@@ -85,51 +97,39 @@ def process_conditions(conditions):
         return conditions
 
 
-def generate_string(data):
-    conditions  = data["current_observation"]
-    # forecast    = data["forecast"]["simpleforecast"]["forecastday"]
-
-    cityname    = conditions["display_location"]["full"]
-    temp_c      = conditions["temp_c"]
-    feels_c     = conditions["feelslike_c"]
-    weather     = conditions["weather"]
-    station     = conditions["observation_location"]["city"]
-    obs_time    = conditions["observation_time_rfc822"]
-    humidity    = conditions["relative_humidity"]
-    wind_vel    = conditions["wind_kph"]
-    wind_from   = conditions["wind_dir"]
+def generate_string(data, additional):
+    if 'metric' in data.keys():
+        cityname    = data["neighborhood"]
+        temp_c      = data["metric"]["temp"]
+        feels_c     = data["metric"]["heatIndex"]
+        wind_vel    = data["metric"]["windSpeed"]
+        station     = data["neighborhood"]
+        obs_time    = data["obsTimeLocal"]
+        humidity    = data["humidity"]
+        weather     = additional["cloudCoverPhrase"]
+    else:
+        cityname    = ""
+        temp_c      = data["temperature"]
+        feels_c     = data["temperatureFeelsLike"]
+        wind_vel    = data["windSpeed"]
+        station     = ""
+        obs_time    = data["validTimeLocal"]
+        humidity    = data["relativeHumidity"]
+        weather     = data["cloudCoverPhrase"]
 
     header  = ""
-    footer  = ""
-    now     = datetime.datetime.now()
 
-    header = "EITA PORA a tenps em {} eh d {} con uma sensasaosinha d {}\n".format(cityname, temp_c, feels_c)
-    header += "a parti da estasao meteurolojics la em {} em {}\n".format(station, obs_time[5:])
+    if cityname != "":
+        header += "EITA PORA a tenps em {} eh d {} con uma sensasaosinha d {}\n".format(cityname, temp_c, feels_c)
+        header += "a parti da estasao meteurolojics la em {} em {}\n".format(station, obs_time)
+    else:
+        header += "EITA PORA a tenps eh d {} con uma sensasaosinha d {}\n".format(temp_c, feels_c)
+
     header += "umanidade di {}\n".format(humidity)
-    header += "uns veto vino a {} narizes do retcha/h de {}\n".format(wind_vel, wind_from)
+    header += "uns veto vino a {} narizes do retcha/h\n".format(wind_vel)
     header += "atlamente la ta ó::::::: {}".format(process_conditions(weather))
 
-    # Se já é noite, pegue a previsão do dia seguinte. (index 0 é hoje, 1 é amanhã)
-   # if now.hour >= 18:
-   #     forecast_max    = forecast[1]["high"]["celsius"]
-   #     forecast_min    = forecast[1]["low"]["celsius"]
-   #     precipitation   = forecast[1]["pop"]
-   #     conditions      = process_conditions(forecast[1]["conditions"])
-
-   #     footer = "\n\ni sera q vai chove amanh??????\n"
-   #     footer += "{} con una prporlbindade d presiispatasao d {}\n".format(conditions, precipitation)
-   #     footer += "másima d {} minim d {}".format(forecast_max , forecast_min)
-   # else:
-   #     forecast_max    = forecast[0]["high"]["celsius"]
-   #     forecast_min    = forecast[0]["low"]["celsius"]
-   #     precipitation   = forecast[0]["pop"]
-   #     conditions      = process_conditions(forecast[0]["conditions"])
-
-   #     footer = "\n\ni sera q vai chove hj????\n"
-   #     footer += "{} con una prporlbindade d presiispatasao d {}\n".format(conditions, precipitation)
-   #     footer += "másima d {} minim d {}".format(forecast_max, forecast_min)
-
-    return header #+ footer
+    return header
 
 
 def on_msg_received(msg, matches):
@@ -142,16 +142,13 @@ def on_msg_received(msg, matches):
         args = args.split(" ")
         if args[0] != "add":
             location = args
-            print("1", location)
         else:
             add_entry(user, " ".join(args[1:]))
             api.send_message(chat, "aewwwwww agr sei ondnd q peoga as info =]\nagr r voc epode ffzere /wunder ok")
             return
 
-
     else:
         location = resolve_location(user)
-        print("2", location)
 
     if location is None:
         api.send_message(chat, "vei n sei qaltua cdd..... use */wunder add [estacao]* <<<------- botassua eksltaçao ali rs")
@@ -159,23 +156,29 @@ def on_msg_received(msg, matches):
 
     try:
         print("trying")
-        data            = get_conditions_and_forecast(location)
-        satellite_img   = get_satellite_url(location)
-        message         = generate_string(data) 
+        data            = get_current_conditions(location)
+        if len(location) != 4:
+            additional  = get_additional_info(data)
+        else:
+            additional = None
 
-        print(data, satellite_img, message)
+        message         = generate_string(data, additional) 
 
-        print("satellite url: " + satellite_img)
+        print(data, message)
 
         api.send_message(chat, message)
         
-        url = "https://api.telegram.org/" + os.environ['REBORNKEY'] + "/sendAnimation?"
-        url += "chat_id=" + str(chat)
-
-        imagedata = requests.get(satellite_img).content
-        payload = {"animation": ('nuvens.gif', imagedata, 'image/gif')}
-
-        requests.post(url, files=payload)
-
     except Exception as e:
         api.send_message(chat, f"ops deu pobreminha rsrsrs: {e}")
+        pass
+
+# location = "SBDN"
+# data            = get_current_conditions(location)
+# if len(location) != 4:
+#     additional  = get_additional_info(data)
+# else:
+#     additional = None
+
+# message         = generate_string(data, additional) 
+
+# print(data, message)

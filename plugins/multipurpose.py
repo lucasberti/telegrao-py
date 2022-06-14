@@ -6,7 +6,7 @@
 # A maioria é um port bem rápido de https://github.com/lucasberti/telegrao/blob/master/plugins/taup.lua
 
 from api import send_message, send_sticker, send_document, send_photo, send_voice
-from random import randint, choice, randrange
+from random import randint, choice, randrange, shuffle
 from datetime import datetime
 import json
 import re
@@ -55,7 +55,7 @@ def on_msg_received(msg, matches):
         "text": ["-50 | -20 | -15 | -10 | -5 | 0 | +100"]
     },
     "^[!/]historia(?:@PintaoBot)?$": {
-        "text": ["youtube.com/watch?v=ZkwdNcrIbxs"],
+        "text": ["youtube.com/watch?v=ZkwdNcrIbxs\nyoutube.com/watch?v=_kGPvXqxydw"],
         "voice": ["AwADAQADRAADgBaoRzTp0hx182Z7Ag", "AwADAQADTwADRojZRSmcrD6Nylp7Ag"]
     },
     "^\?$": {
@@ -135,11 +135,13 @@ def on_msg_received(msg, matches):
             print(e)
 
     for arroba in arrobas.keys():
-        if arroba in text:
-            send_message(chat, " ".join(arrobas[arroba]))
-            if "@giovannicardoso" in arrobas[arroba]:
-                send_message(chat, "@giovannicardoso") 
-                    
+        if arroba in text and len(arrobas[arroba]) > 0:
+            add = ["@dilma", "@obama", "@janival", "@zebostola", "@cazio", "@punk_victor", "@izzynobre", "@godgaugodgod", "@ninguem"]
+            arrobas[arroba].append(choice(add))
+            arrobas[arroba].append(choice(add))
+            shuffle(arrobas[arroba])
+            send_message(chat, arroba + ": " + " ".join(arrobas[arroba]), parse_mode="")
+                   
     for pat in dicionario:
         pattern = re.compile(pat)
         match = pattern.search(text)
@@ -250,6 +252,20 @@ def on_msg_received(msg, matches):
     
         send_message(chat, f"ja fasen {days} dias {hours} oras {minutes} menudos {seconds} scundos dsd o grnd dia eeu nen tavala :((")
 
+    # encontro 2
+    pattern = re.compile("^[!/]meeting$")
+    match = pattern.search(text)
+
+    if match:
+        encontro = datetime.fromtimestamp(1649991600)
+        delta = datetime.now() - encontro
+
+        days = delta.days
+        hours = int(delta.seconds / 3600)
+        minutes = int(delta.seconds % 3600 / 60)
+        seconds = delta.seconds % 60
+
+        send_message(chat, f" oquei le enconter ras repened {days} deis {hours} oros {minutes} mints {seconds} scundos 1 agol ..")
 
     # x
     pattern = re.compile("^(xis|x)$", re.IGNORECASE)

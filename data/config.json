@@ -18,22 +18,23 @@
         299335806,
         123299051,
         77547673,
-        35072014
+        35072014,
+        1035695145,
+        1008312930
     ],
     "enabled_plugins": {
-        "^[!/]steam(?:@PintaoBot)?$": "steam",
-        "^[!/]melenbra(?:@PintaoBot)? ?([0-9]+d)?([0-9]+h)?([0-9]+m)?([0-9]+s)?(?: (.+))?$": "melenbra",
+        "^[!/]melenbra(?:@PintaoBot)? (?:(.*?), )?(.*)": "melenbra",
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
         "^[!/]plugins(?:@PintaoBot)?( (.*) (.*))?": "plugins",
         "^[!/]vamojoga(?:@PintaoBot)? (.*) (\\d+)$": "vamojoga",
         "^[!/]qqe(?:@PintaoBot)? (.*)": "qqe",
-        "^[!/]ts(?:@PintaoBot)?": "ts",
+        "^[!/]qqeisso(?:@PintaoBot)? (.*)": "qqeisso",
+	    "^[!/]discord(?:@PintaoBot)?": "discord",
         "^[!/]xet(?:@PintaoBot)? ?(.*)?": "markov",
         "^[!/]r6(?:@PintaoBot)? ?(.*)?": "r6",
         "^[!/]apex(?:@PintaoBot)? ?(.*)?": "apex",
         "^[!/]echo(?:@PintaoBot)? (.*)$": "echo",
         "^[!/]calc(?:@PintaoBot)? (.*)$": "calc",
-        "^[!/]correios(?:@PintaoBot)? (.*)$": "correios",
         "^[!/]cursed(?:@PintaoBot)?": "cursed",
         "^[!/]treta(?:@PintaoBot)? ?(.*)?": "treta",
         "^[!/]meme(?:@PintaoBot)? (.*), (.*), (.*)$": "meme",
@@ -41,11 +42,18 @@
         "^[!/]cartola(?:@PintaoBot)? ?(.*)?$": "cartola",
         "^([!/][gs]et)(?:@PintaoBot)? ?(.*)?": "set",
         "^[!/]escolhe(?:@PintaoBot)? (.*)$": "escolhe",
-	"^(.*)$": "multipurpose"
+        "^[!/]covid(?:@PintaoBot)?": "covid",
+        "^[!/]wunder(?:@PintaoBot)? ?(.*)?$": "wunder",
+        "^[!/]steam(?:@PintaoBot)?$": "steam",
+        "^[!/]ts(?:@PintaoBot)?": "ts",
+        "^[!/]mine(?:@PintaoBot)?": "mine",
+        "^[!/]vr(?:@PintaoBot)?": "vr",
+        "^[!/]pinto(?:@PintaoBot)? (.*)$": "pinto",
+        "^(.*)$": "multipurpose"
     },
     "disabled_plugins": {
         "^[!/]hltv(?:@PintaoBot)? (\\w+) ?(\\d+)?$": "hltv",
-        "^[!/]wunder(?:@PintaoBot)? ?(.*)?$": "wunder"
+        "^[!/]correios(?:@PintaoBot)? (.*)$": "correios"
     },
     "callback_query_plugins": [
         "vamojoga"
