@@ -8,6 +8,7 @@ import os
 
 base_url        = "https://api.weather.com/v2/pws/observations/current"
 conditions_url  = "https://api.weather.com/v3/wx/observations/current" # só pra pegar o texto de current
+api_key = os.getenv("OPENAI_REV_PASSWORD")
 
 
 def load_locations():
@@ -43,7 +44,7 @@ def get_additional_info(info):
     geocode = str(info["lat"])[:7] + "," + str(info["lon"])[:7]
     
     params = {
-        "apiKey": "6532d6454b8aa370768e63d6ba5a832e",
+        "apiKey": api_key,
         "units": "m",
         "geocode": geocode,
         "language": "pt-BR",
@@ -55,7 +56,7 @@ def get_additional_info(info):
 
 def get_current_conditions(place):
     params = {
-        "apiKey": "6532d6454b8aa370768e63d6ba5a832e",
+        "apiKey": api_key,
         "units": "m",
         "format": "json"
     }
@@ -63,9 +64,11 @@ def get_current_conditions(place):
     if len(place) == 4:
         params['icaoCode'] = place
         params['language'] = "pt-BR"
+
         response = requests.get(conditions_url, params=params).json()
     else:
         params['stationId'] = place
+        
         response = requests.get(base_url, params=params).json()["observations"][0]
 
     return response
@@ -155,14 +158,14 @@ def on_msg_received(msg, matches):
         return
 
     try:
-        print("trying")
-        data            = get_current_conditions(location)
+        data = get_current_conditions(location)
+
         if len(location) != 4:
-            additional  = get_additional_info(data)
+            additional = get_additional_info(data)
         else:
             additional = None
 
-        message         = generate_string(data, additional) 
+        message = generate_string(data, additional) 
 
         print(data, message)
 

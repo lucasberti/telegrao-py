@@ -16,6 +16,7 @@ import os
 from io import BytesIO
 import plugins.stats as stats
 import plugins.ed as ed
+import plugins.chat as chatgpt
 import time
 
 emotes = {}
@@ -32,10 +33,11 @@ def on_msg_received(msg, matches):
 
     stats.do_statistics(msg)
     ed.run_ed(msg)
+    chatgpt.run_chat(msg)
 
     if "reply_to_message" in msg:
         if msg["reply_to_message"]["from"]["id"] == 98532395:
-            send_message(chat, ed.talk_to_ed(text))
+            send_message(chat, chatgpt.talk_to_chat(text))
 
 
     dicionario = {

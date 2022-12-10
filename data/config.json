@@ -48,7 +48,9 @@
         "^[!/]ts(?:@PintaoBot)?": "ts",
         "^[!/]mine(?:@PintaoBot)?": "mine",
         "^[!/]vr(?:@PintaoBot)?": "vr",
-        "^[!/]pinto(?:@PintaoBot)? (.*)$": "pinto",
+        "^[!/]pinto2(?:@PintaoBot)? (.*)$": "pinto",
+        "^[!/]pinto(?:@PintaoBot)? (.*)$": "pinto2",
+        "^[!/]escrito(?:@PintaoBot)? (.*)$": "escrito",
         "^(.*)$": "multipurpose"
     },
     "disabled_plugins": {

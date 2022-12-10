@@ -8,9 +8,10 @@ import config
 import threading
 import traceback
 import sys
-from time import gmtime
+from time import gmtime, sleep
 from calendar import timegm
 
+SECS_BEFORE_MSG_IS_TOO_OLD = 10
 
 logging.basicConfig(format='%(asctime)s.%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                     datefmt='%d-%m-%Y:%H:%M:%S',
@@ -54,16 +55,17 @@ def log(msg):
         origin = msg_origin(msg)
         message_type = msg_type(msg)
 
-        log_str = ""
-        log_str += msg["from"]["first_name"] + " enviou " + message_type + " "
+        log_str = f"{msg['from']['first_name']} ({msg['from']['id']}) enviou {message_type} ({msg['message_id']}) "
 
         if "group" in origin:
-            log_str += "em \"" + msg["chat"]["title"] + "\""
+            log_str += f"em \"{msg['chat']['title']}\" "
         elif origin == "private":
-            log_str += "em PRIVADO"
+            log_str += "em PRIVADO "
+
+        log_str += f"({msg['chat']['id']})"
 
         if message_type == "text":
-            log_str += ": " + msg["text"]
+            log_str += f": {msg['text']}"
 
         logging.info(log_str)
         print(log_str)
@@ -102,18 +104,8 @@ def on_msg_received(msg):
 
             if plugin_match is not None and matches is not None:
                 loaded = importlib.import_module("plugins." + plugin_match)
-                try:
-                    loaded.on_msg_received(msg, matches)
-                except:
-                    # Hardcodando aviso de erro. Não serve pra prevenir.
-                    exc_type, exc_value, exc_traceback = sys.exc_info()
 
-                    printable = repr(traceback.format_exception(exc_type, exc_value, exc_traceback))
-
-                    for sudoer in config.config["sudoers"]:
-                        api.send_message(sudoer, "ME CAPOTARO AQUI PORRA \n\n" + printable)
-
-                    raise
+                loaded.on_msg_received(msg, matches)
 
     else:
         log("Mensagem não autorizada de " + msg["from"]["first_name"] + " (" + str(msg["from"]["id"]) + ")")
@@ -136,20 +128,35 @@ def start_longpoll():
     most_recent = 0
 
     while True:
-        updates = api.get_updates(offset=most_recent)
+        try:
+            updates = api.get_updates(offset=most_recent)
 
-        if updates is not None:
-            for update in updates:
-                if "message" in update and timegm(gmtime()) - update["message"]["date"] < 10:
-                    on_msg_received(update["message"])
-                elif "edited_message" in update and timegm(gmtime()) - update["edited_message"]["date"] < 10:
-                    on_msg_edited(update["edited_message"])
-                elif "callback_query" in update:
-                    on_callback_query(update["callback_query"])
-                else:
-                    log("Mensagem muito antiga ou desconhecida; ignorando.")
+            if updates is not None:
+                for update in updates:
+                    if "message" in update and timegm(gmtime()) - update["message"]["date"] < SECS_BEFORE_MSG_IS_TOO_OLD:
+                        on_msg_received(update["message"])
+                    elif "edited_message" in update and timegm(gmtime()) - update["edited_message"]["date"] < SECS_BEFORE_MSG_IS_TOO_OLD:
+                        on_msg_edited(update["edited_message"])
+                    elif "callback_query" in update:
+                        on_callback_query(update["callback_query"])
+                    else:
+                        log("Mensagem muito antiga ou desconhecida; ignorando.")
 
-                most_recent = update["update_id"] + 1
+                    most_recent = update["update_id"] + 1
+        except KeyboardInterrupt as e:
+            sys.exit(0)
+        except Exception as e:
+            # Hardcodando aviso de erro. Não serve pra prevenir.
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+
+            printable = repr(traceback.format_exception(exc_type, exc_value, exc_traceback))
+
+            for sudoer in config.config["sudoers"]:
+                api.send_message(sudoer, f"ME CAPOTARO AQUI PORRA \n\n{printable}")
+                api.send_message(sudoer, f"ai q sono vo durmi por {SECS_BEFORE_MSG_IS_TOO_OLD}")
+
+            sleep(SECS_BEFORE_MSG_IS_TOO_OLD)
+            
 
 
 def start_plugins():
