@@ -1,12 +1,10 @@
 from dataclasses import dataclass
+from typing import Optional
 
 @dataclass
-class Video:
+class VideoNote:
     file_id: str
     file_unique_id: str
-    width: int
-    height: int
+    length: int
     duration: int
-    file_name: str
-    mime_type: str
-    file_size: int
+    file_size: Optional[int] = None

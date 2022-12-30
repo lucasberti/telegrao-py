@@ -23,6 +23,11 @@
         1008312930
     ],
     "enabled_plugins": {
+        "^(.*)$": "multipurpose"
+    },
+    "disabled_plugins": {
+        "^[!/]hltv(?:@PintaoBot)? (\\w+) ?(\\d+)?$": "hltv",
+        "^[!/]correios(?:@PintaoBot)? (.*)$": "correios",
         "^[!/]melenbra(?:@PintaoBot)? (?:(.*?), )?(.*)": "melenbra",
         "^[!/]img(?:@PintaoBot)? (.*)": "img",
         "^[!/]plugins(?:@PintaoBot)?( (.*) (.*))?": "plugins",
@@ -50,12 +55,7 @@
         "^[!/]vr(?:@PintaoBot)?": "vr",
         "^[!/]pinto2(?:@PintaoBot)? (.*)$": "pinto",
         "^[!/]pinto(?:@PintaoBot)? (.*)$": "pinto2",
-        "^[!/]escrito(?:@PintaoBot)? (.*)$": "escrito",
-        "^(.*)$": "multipurpose"
-    },
-    "disabled_plugins": {
-        "^[!/]hltv(?:@PintaoBot)? (\\w+) ?(\\d+)?$": "hltv",
-        "^[!/]correios(?:@PintaoBot)? (.*)$": "correios"
+        "^[!/]escrito(?:@PintaoBot)? (.*)$": "escrito"
     },
     "callback_query_plugins": [
         "vamojoga"

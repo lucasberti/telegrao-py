@@ -1,22 +1,21 @@
 import json
 import os
 import requests
-import utils.unpacker
+from utils.utils import DataClassUnpack
 
-from .types.message import Message
-from .types.user import User
-from .types.chat import Chat
-from .types.audio import Audio
-from .types.document import Document
-from .types.photosize import PhotoSize
-from .types.sticker import Sticker
-from .types.video import Video
-from .types.videonote import VideoNote
+from tg_types.audio import Audio
+from tg_types.chat import Chat
+from tg_types.document import Document
+from tg_types.message import Message
+from tg_types.photosize import PhotoSize
+from tg_types.sticker import Sticker
+from tg_types.user import User
+from tg_types.video import Video
+from tg_types.videonote import VideoNote
+from tg_types.voice import Voice
 
 
-def _create_message(result) -> Message:
-    response = response["result"]
-
+def _create_message(response) -> Message:
     response_message = response["message"]
     response_chat = response_message["chat"]
     response_from = response_message["from"]
@@ -28,122 +27,41 @@ def _create_message(result) -> Message:
     response_video_note = response_message["video_note"] if "video_note" in response_message else None
     response_voice = response_message["voice"] if "voice" in response_message else None
 
-    result_chat = Chat(
-        id=response_chat["id"],
-        type=response_chat["type"],
-        title=response_chat["title"] or None,
-        username=response_chat["username"] or None,
-        first_name=response_chat["first_name"] or None,
-        last_name=response_chat["last_name"] or None
-    )
-
-    result_from = User(
-        id=response_from["id"],
-        is_bot=response_from["is_bot"],
-        first_name=response_from["first_name"] or None,
-        last_name=response_from["last_name"] or None,
-        username=response_from["username"] or None
-    )
+    result_chat = DataClassUnpack.instantiate(Chat, response_chat)
+    result_from = DataClassUnpack.instantiate(User, response_from)
 
     if response_audio:
-        result_audio = Audio(
-            file_id=response_audio["file_id"],
-            file_unique_id=response_audio["file_unique_id"],
-            duration=response_audio["duration"] or None,
-            performer=response_audio["performer"] or None,
-            title=response_audio["title"] or None,
-            mime_type=response_audio["mime_type"] or None,
-            file_size=response_audio["file_size"] or None
-        )
+        result_audio = DataClassUnpack.instantiate(Audio, response_audio)
     else:
         result_audio = None
 
     if response_document:
-        result_document = Document(
-            file_id=response_document["file_id"],
-            file_unique_id=response_document["file_unique_id"],
-            thumb=PhotoSize(
-                file_id=response_document["thumb"]["file_id"],
-                file_unique_id=response_document["thumb"]["file_unique_id"],
-                width=response_document["thumb"]["width"],
-                height=response_document["thumb"]["height"],
-                file_size=response_document["thumb"]["file_size"]
-            ) if "thumb" in response_document else None,
-            file_name=response_document["file_name"] or None,
-            mime_type=response_document["mime_type"] or None,
-            file_size=response_document["file_size"] or None
-        )
+        result_document = DataClassUnpack.instantiate(Document, response_document)
     else:
         result_document = None
 
     if response_photo:
-        result_photo = PhotoSize(
-            file_id=response_photo["file_id"],
-            file_unique_id=response_photo["file_unique_id"],
-            width=response_photo["width"],
-            height=response_photo["height"],
-            file_size=response_photo["file_size"]
-        )
+        result_photo = [DataClassUnpack.instantiate(PhotoSize, photo) for photo in response_photo]
     else:
         result_photo = None
 
     if response_sticker:
-        result_sticker = Sticker(
-            file_id=response_sticker["file_id"],
-            file_unique_id=response_sticker["file_unique_id"],
-            width=response_sticker["width"],
-            height=response_sticker["height"],
-            file_size=response_sticker["file_size"]
-        )
+        result_sticker = DataClassUnpack.instantiate(Sticker, response_sticker)
     else:
         result_sticker = None
 
     if response_video:
-        result_video = Video(
-            file_id=response_video["file_id"],
-            file_unique_id=response_video["file_unique_id"],
-            width=response_video["width"],
-            height=response_video["height"],
-            duration=response_video["duration"] or None,
-            thumb=PhotoSize(
-                file_id=response_video["thumb"]["file_id"],
-                file_unique_id=response_video["thumb"]["file_unique_id"],
-                width=response_video["thumb"]["width"],
-                height=response_video["thumb"]["height"],
-                file_size=response_video["thumb"]["file_size"]
-            ) if "thumb" in response_video else None,
-            mime_type=response_video["mime_type"] or None,
-            file_size=response_video["file_size"] or None
-        )
+        result_video = DataClassUnpack.instantiate(Video, response_video)
     else:
         result_video = None
 
     if response_video_note:
-        result_video_note = VideoNote(
-            file_id=response_video_note["file_id"],
-            file_unique_id=response_video_note["file_unique_id"],
-            length=response_video_note["length"] or None,
-            duration=response_video_note["duration"] or None,
-            thumb=PhotoSize(
-                file_id=response_video_note["thumb"]["file_id"],
-                file_unique_id=response_video_note["thumb"]["file_unique_id"],
-                width=response_video_note["thumb"]["width"],
-                height=response_video_note["thumb"]["height"],
-                file_size=response_video_note["thumb"]["file_size"]
-            ) if "thumb" in response_video_note else None,
-            file_size=response_video_note["file_size"] or None
-        )
+        result_video_note = DataClassUnpack.instantiate(VideoNote, response_video_note)
     else:
         result_video_note = None
 
     if response_voice:
-        result_voice = Voice(
-            file_id=response_voice["file_id"],
-            file_unique_id=response_voice["file_unique_id"],
-            duration=response_voice["duration"] or None,
-            mime_type=response_voice["mime_type"] or None,
-            file_size=response_voice["file_size"] or None
-        )
+        result_voice = DataClassUnpack.instantiate(Voice, response_voice)
     else:
         result_voice = None
 
@@ -159,8 +77,8 @@ def _create_message(result) -> Message:
         sticker=result_sticker,
         video=result_video,
         video_note=result_video_note,
-        voice=result_voice
-        reply_to_message=response_message["reply_to_message"] or None
+        voice=result_voice,
+        reply_to_message=DataClassUnpack.instantiate(Message, response_message["reply_to_message"]) if "reply_to_message" in response_message else None
     )
 
     return result_message
@@ -177,8 +95,9 @@ def get_updates(offset=0, timeout=60) -> Message:
     except Exception:
         return None
 
-    if response["ok"]:      
-        return _create_message(response)
+    if response["ok"]:     
+        print(response) 
+        return [_create_message(msg) for msg in response["result"]]
     else:
         return None
 

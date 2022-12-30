@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 @dataclass
 class Sticker:
@@ -9,5 +10,5 @@ class Sticker:
     height: int
     is_animated: bool
     is_video: bool
-    emoji: str
-    file_size: int
+    emoji: Optional[str] = None
+    file_size: Optional[str] = None

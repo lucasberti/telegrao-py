@@ -171,7 +171,7 @@ def start_plugins():
 def main():
     """ Entry point né porra. """
     log("Iniciando sessão")
-    start_plugins()
+    #start_plugins()
     start_longpoll()
 
 

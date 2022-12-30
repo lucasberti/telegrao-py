@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 @dataclass
 class PhotoSize:
@@ -6,4 +7,4 @@ class PhotoSize:
     file_unique_id: str
     width: int
     height: int
-    file_size: int
+    file_size: Optional[int] = None
