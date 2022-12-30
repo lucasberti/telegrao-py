@@ -8,7 +8,7 @@ import os
 
 base_url        = "https://api.weather.com/v2/pws/observations/current"
 conditions_url  = "https://api.weather.com/v3/wx/observations/current" # só pra pegar o texto de current
-api_key = os.getenv("OPENAI_REV_PASSWORD")
+api_key = os.getenv("WUNDER_API_KEY")
 
 
 def load_locations():
@@ -173,7 +173,8 @@ def on_msg_received(msg, matches):
         
     except Exception as e:
         api.send_message(chat, f"ops deu pobreminha rsrsrs: {e}")
-        pass
+        raise e
+
 
 # location = "SBDN"
 # data            = get_current_conditions(location)
