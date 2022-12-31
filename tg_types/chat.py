@@ -5,7 +5,7 @@ from typing import Optional
 class Chat:
     id: int
     type: str
-    first_name: str
+    first_name: Optional[str] = None
     title: Optional[str] = None
     username: Optional[str] = None
     last_name: Optional[str] = None

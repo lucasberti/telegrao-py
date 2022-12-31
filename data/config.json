@@ -23,7 +23,7 @@
         1008312930
     ],
     "enabled_plugins": {
-        "^(.*)$": "multipurpose"
+        "^(.*)$": "test"
     },
     "disabled_plugins": {
         "^[!/]hltv(?:@PintaoBot)? (\\w+) ?(\\d+)?$": "hltv",

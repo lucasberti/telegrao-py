@@ -5,7 +5,7 @@ from typing import Optional
 class User:
     id: int
     is_bot: bool
-    language_code: str
+    language_code: Optional[str] = None
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     username: Optional[str] = None

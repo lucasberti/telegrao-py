@@ -1,82 +1,58 @@
 # encoding=utf-8
 
-import api
 import importlib
 import logging
 import re
-import config
+import sys
 import threading
 import traceback
-import sys
-from time import gmtime, sleep
 from calendar import timegm
+from time import gmtime, sleep
+from typing import List
+
+import api
+import config
+from tg_types.message import Message
+from tg_types.update import Update
 
 SECS_BEFORE_MSG_IS_TOO_OLD = 10
 
 logging.basicConfig(format='%(asctime)s.%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
-                    datefmt='%d-%m-%Y:%H:%M:%S',
-                    level=logging.INFO, handlers=[logging.FileHandler("log.log", "a", "utf-8")])
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    level=logging.INFO, handlers=[
+                            logging.FileHandler("log.log", "a", "utf-8"),
+                            logging.StreamHandler(sys.stdout)
+                        ])
 
 
-def msg_type(msg):
-    """ Retorna se é texto, foto, áudio, vídeo """
-    if "text" in msg:
-        return "text"
-    elif "photo" in msg:
-        return "photo"
-    elif "voice" in msg:
-        return "voice"
-    elif "video" in msg:
-        return "video"
-    elif "document" in msg:
-        return "document"
-    elif "audio" in msg:
-        return "audio"
-    elif "sticker" in msg:
-        return "sticker"
-    elif "video_note" in msg:
-        return "video note"
-    else:
-        return "outra coisa"
-
-
-def msg_origin(msg):
-    """ Mensagem privada ou mensagem de grupo"""
-    return msg["chat"]["type"]
-
-
-def log(msg):
-    """ Loga pra arquivo tudo o que acontecer. """
-
+def log(msg: Message):
     if type(msg) is str:
         logging.info(msg)
-        print(msg)
     else:
-        origin = msg_origin(msg)
-        message_type = msg_type(msg)
+        origin = msg.chat.type
+        message_type = msg.get_message_type()
 
-        log_str = f"{msg['from']['first_name']} ({msg['from']['id']}) enviou {message_type} ({msg['message_id']}) "
+        log_str = f"{msg._from.first_name} ({msg._from.id}) enviou {message_type} ({msg.message_id}) "
 
         if "group" in origin:
-            log_str += f"em \"{msg['chat']['title']}\" "
+            log_str += f"em \"{msg.chat.title}\" "
         elif origin == "private":
             log_str += "em PRIVADO "
 
-        log_str += f"({msg['chat']['id']})"
+        log_str += f"({msg.chat.id})"
 
         if message_type == "text":
-            log_str += f": {msg['text']}"
+            log_str += f": {msg.text}"
 
         logging.info(log_str)
-        print(log_str)
 
 
 def is_sudoer(id):
     return id in config.config["sudoers"]
 
 
-def is_authorized(msg):
-    return msg["from"]["id"] in config.config["authorized_users"]
+def is_authorized(msg: Message):
+    return msg._from.id in config.config["authorized_users"]
 
 
 def msg_matches(msg_text):
@@ -86,21 +62,21 @@ def msg_matches(msg_text):
 
         if match:
             if query != "^(.*)$":
-                log("MATCH! Plugin: " + plugin)
+                logging.debug("MATCH! Plugin: " + plugin)
 
             return plugin, match
 
     return None, None
 
 
-def on_msg_received(msg):
+def on_msg_received(msg: Message):
     """ Callback pra quando uma mensagem é recebida. """
 
     if is_authorized(msg):
         log(msg)
 
-        if msg_type(msg) == "text":
-            plugin_match, matches = msg_matches(msg["text"])
+        if msg.get_message_type() == "text":
+            plugin_match, matches = msg_matches(msg.text)
 
             if plugin_match is not None and matches is not None:
                 loaded = importlib.import_module("plugins." + plugin_match)
@@ -108,15 +84,15 @@ def on_msg_received(msg):
                 loaded.on_msg_received(msg, matches)
 
     else:
-        log("Mensagem não autorizada de " + msg["from"]["first_name"] + " (" + str(msg["from"]["id"]) + ")")
+        log("Mensagem não autorizada de " + msg._from.first_name + " (" + str(msg._from.id) + ")")
 
 
-def on_msg_edited(msg):
+def on_msg_edited(msg: Message):
     """ Callback que define o que acontecerá quando uma mensagem for editada. """
     pass
 
 
-def on_callback_query(msg):
+def on_callback_query(msg: Message):
     """ Callback que define o que acontecerá quando um dado de um InlineKeyboardButton for recebido. """
     for plugin in config.config["callback_query_plugins"]:
         loaded = importlib.import_module("plugins." + plugin)
@@ -129,20 +105,20 @@ def start_longpoll():
 
     while True:
         try:
-            updates = api.get_updates(offset=most_recent)
+            updates: List[Update] = api.get_updates(offset=most_recent)
 
             if updates is not None:
                 for update in updates:
-                    if "message" in update and timegm(gmtime()) - update["message"]["date"] < SECS_BEFORE_MSG_IS_TOO_OLD:
-                        on_msg_received(update["message"])
-                    elif "edited_message" in update and timegm(gmtime()) - update["edited_message"]["date"] < SECS_BEFORE_MSG_IS_TOO_OLD:
-                        on_msg_edited(update["edited_message"])
-                    elif "callback_query" in update:
-                        on_callback_query(update["callback_query"])
+                    if update.message and timegm(gmtime()) - update.message.date < SECS_BEFORE_MSG_IS_TOO_OLD:
+                        on_msg_received(update.message)
+                    elif update.edited_message and timegm(gmtime()) - update.edited_message.date < SECS_BEFORE_MSG_IS_TOO_OLD:
+                        on_msg_edited(update.edited_message)
+                    elif update.callback_query:
+                        on_callback_query(update.callback_query)
                     else:
-                        log("Mensagem muito antiga ou desconhecida; ignorando.")
+                        logging.info("Mensagem muito antiga ou desconhecida; ignorando.")
 
-                    most_recent = update["update_id"] + 1
+                    most_recent = update.update_id + 1 # TODO
         except KeyboardInterrupt as e:
             sys.exit(0)
         except Exception as e:
@@ -170,7 +146,7 @@ def start_plugins():
 
 def main():
     """ Entry point né porra. """
-    log("Iniciando sessão")
+    logging.info("Iniciando sessão")
     #start_plugins()
     start_longpoll()
 
