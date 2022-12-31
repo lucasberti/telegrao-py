@@ -1,12 +1,11 @@
 import os
 import re
 from api import send_message
-from revChatGPT.revChatGPT import Chatbot
+from revChatGPT.ChatGPT import Chatbot
 
 
 config = {
-    "email": os.getenv("OPENAI_REV_EMAIL"),
-    "password": os.getenv("OPENAI_REV_PASSWORD")
+    "session_token": os.getenv("OPENAI_REV_SESSION")
 }
 
 chatbot = Chatbot(config, conversation_id=None)
@@ -14,7 +13,7 @@ chatbot = Chatbot(config, conversation_id=None)
 def talk_to_chat(prompt):
     print(f"Generating output for {prompt}")
 
-    response = chatbot.get_chat_response(prompt, output="text")
+    response = chatbot.ask(prompt, output="text")
     return response["message"]
 
 

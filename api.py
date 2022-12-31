@@ -15,6 +15,8 @@ def get_updates(offset=0, timeout=60):
         return None
 
     if response["ok"] is True:
+        print(response)
+        
         return response["result"]
     else:
         return None
