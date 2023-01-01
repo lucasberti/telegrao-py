@@ -19,19 +19,12 @@ from tg_types.voice import Voice
 
 
 def _create_message(response) -> Message:
-    is_normal_message = False
-    is_edited = False
-    is_callback_query = False
-
     if "message" in response:
         response_message = response["message"]
-        is_normal_message = True
     elif "edited_message" in response:
         response_message = response["edited_message"]
-        is_edited = True
     elif "callback_query" in response:
         response_message = response["callback_query"]
-        is_callback_query = True
     else:
         response_message = response["result"]
     
@@ -69,12 +62,10 @@ def _create_message(response) -> Message:
         video_note=result_video_note,
         voice=result_voice,
         reply_to_message=DataClassUnpack.instantiate(Message, response_message["reply_to_message"]) if "reply_to_message" in response_message else None,
-        is_normal_message=is_normal_message,
-        is_edited=is_edited,
-        is_callback_query=is_callback_query
     )
 
     return result_message
+
 
 def _create_update(update) -> Update:
     return Update(

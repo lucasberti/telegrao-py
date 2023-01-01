@@ -47,8 +47,8 @@ def log(msg: Message):
         logging.info(log_str)
 
 
-def is_sudoer(id):
-    return id in config.config["sudoers"]
+def is_admin(id):
+    return id in config.config["admins"]
 
 
 def is_authorized(msg: Message):

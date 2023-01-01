@@ -25,9 +25,6 @@ class Message:
     forward_from_chat: Optional[Chat] = None
     forward_from_message_id: Optional[int] = None
     reply_to_message: Optional[Message] = None
-    is_normal_message: Optional[bool] = None
-    is_edited: Optional[bool] = None
-    is_callback_query: Optional[bool] = None
     audio: Optional[Audio] = None
     document: Optional[Document] = None
     photo: Optional[List[PhotoSize]] = None

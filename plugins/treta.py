@@ -1,11 +1,11 @@
 from api import send_message
 from datetime import datetime
-from reborn import is_sudoer
+from reborn import is_admin
 
 def on_msg_received(msg, matches):
     chat = msg["chat"]["id"]
 
-    if matches.group(1) and is_sudoer(msg["from"]["id"]):
+    if matches.group(1) and is_admin(msg["from"]["id"]):
         if matches.group(1) == "reset":
             with open("data/treta_history.txt", "w") as f:
                 f.write(str(datetime.now().timestamp())[:10])

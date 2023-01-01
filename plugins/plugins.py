@@ -1,6 +1,6 @@
 import config
 from api import send_message
-from reborn import is_sudoer
+from reborn import is_admin
 
 def on_msg_received(msg, matches):
     # Checa se o usuário tem permissão e tem a quantidade correta de args no comando
@@ -28,7 +28,7 @@ def on_msg_received(msg, matches):
 
         send_message(msg["chat"]["id"], string)
 
-    elif is_sudoer(msg["from"]["id"]) and command is not None and plugin is not None:
+    elif is_admin(msg["from"]["id"]) and command is not None and plugin is not None:
         if command == "enable":
             for query, plu in config.plugins.items():
                 # Se o plugin passado for encontrado nos plugins ativos, avisa e sai da função.
