@@ -16,6 +16,7 @@ from tg_types.videonote import VideoNote
 
 @dataclass
 class Message:
+    api: api.Api
     message_id: int
     date: int
     chat: Chat
@@ -33,10 +34,12 @@ class Message:
     video_note: Optional[VideoNote] = None
     voice: Optional[Audio] = None
 
-    def reply(self, text) -> Message:
-        return api.send_message(self.chat.id, text)
 
-    def get_message_type(self) -> Message:
+    def reply(self, text, show_reply=False) -> Message:
+        return self.api.send_message(self.chat.id, text, reply_to_message_id=self.message_id if show_reply else None)
+
+
+    def get_message_type(self) -> str:
         if self.text is not None:
             return "text"
         if self.photo is not None:
@@ -54,4 +57,4 @@ class Message:
         if self.video_note is not None:
             return "video note"
         else:
-            return "outra coisa"
+            return "other"

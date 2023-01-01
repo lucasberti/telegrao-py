@@ -6,12 +6,13 @@ import re
 import sys
 import threading
 import traceback
+import os
 from calendar import timegm
 from time import gmtime, sleep
 from typing import List
 
-import api
 import config
+from api import Api
 from tg_types.message import Message
 from tg_types.update import Update
 
@@ -99,7 +100,7 @@ def on_callback_query(msg: Message):
         loaded.on_callback_query(msg)
 
 
-def start_longpoll():
+def start_longpoll(api: Api):
     """ Inicia longpolling do get_updates. """
     most_recent = 0
 
@@ -118,18 +119,18 @@ def start_longpoll():
                     else:
                         logging.info("Mensagem muito antiga ou desconhecida; ignorando.")
 
-                    most_recent = update.update_id + 1 # TODO
+                    most_recent = update.update_id + 1
         except KeyboardInterrupt as e:
             sys.exit(0)
         except Exception as e:
             # Hardcodando aviso de erro. Não serve pra prevenir.
             exc_type, exc_value, exc_traceback = sys.exc_info()
 
-            printable = repr(traceback.format_exception(exc_type, exc_value, exc_traceback))
+            printable = repr(traceback.format_exception(exc_type, exc_value, exc_traceback)).replace('\\n', '\n')
 
-            for sudoer in config.config["sudoers"]:
-                api.send_message(sudoer, f"ME CAPOTARO AQUI PORRA \n\n{printable}")
-                api.send_message(sudoer, f"ai q sono vo durmi por {SECS_BEFORE_MSG_IS_TOO_OLD}")
+            for admin in config.config["admins"]:
+                api.send_message(admin, f"ME CAPOTARO AQUI PORRA \n\n{printable}")
+                api.send_message(admin, f"ai q sono vo durmi por {SECS_BEFORE_MSG_IS_TOO_OLD}")
 
             sleep(SECS_BEFORE_MSG_IS_TOO_OLD)
             
@@ -145,10 +146,13 @@ def start_plugins():
 
 
 def main():
-    """ Entry point né porra. """
     logging.info("Iniciando sessão")
+    
+    token = os.environ['REBORNKEY']
+    api = Api(token)
+
     #start_plugins()
-    start_longpoll()
+    start_longpoll(api)
 
 
 if __name__ == "__main__":
