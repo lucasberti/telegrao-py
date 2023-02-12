@@ -30,19 +30,19 @@ def get_ids():
 
 
 def translate_persona_state(state):
-    if state is 0:
+    if state == 0:
         return "oflain"
-    elif state is 1:
+    elif state == 1:
         return "omlain"
-    elif state is 2:
+    elif state == 2:
         return "o cu paod"
-    elif state is 3:
+    elif state == 3:
         return "auei"
-    elif state is 4:
+    elif state == 4:
         return "durmino MAS Q DORMINHIOC"
-    elif state is 5:
+    elif state == 5:
         return "kereno troka"
-    elif state is 6:
+    elif state == 6:
         return "kereno joga"
     else:
         return "alguam coisa q n sei"
@@ -70,7 +70,7 @@ def query_steam():
         else:
             gamename = "nada"
 
-        if player["personastate"] is not 0:
+        if player["personastate"] != 0:
             message += "{} ta {} i jogno {}\n".format(name, translate_persona_state(state), gamename)
         else:
             message += "{} ta oflain afff\n".format(name)
