@@ -42,11 +42,8 @@
         "^[!/]cartola(?:@PintaoBot)? ?(.*)?$": "cartola",
         "^([!/][gs]et)(?:@PintaoBot)? ?(.*)?": "set",
         "^[!/]escolhe(?:@PintaoBot)? (.*)$": "escolhe",
-        "^[!/]covid(?:@PintaoBot)?": "covid",
         "^[!/]wunder(?:@PintaoBot)? ?(.*)?$": "wunder",
         "^[!/]steam(?:@PintaoBot)?$": "steam",
-        "^[!/]ts(?:@PintaoBot)?": "ts",
-        "^[!/]mine(?:@PintaoBot)?": "mine",
         "^[!/]vr(?:@PintaoBot)?": "vr",
         "^[!/]pinto2(?:@PintaoBot)? (.*)$": "pinto",
         "^[!/]pinto(?:@PintaoBot)? (.*)$": "pinto2",
@@ -55,7 +52,10 @@
     },
     "disabled_plugins": {
         "^[!/]hltv(?:@PintaoBot)? (\\w+) ?(\\d+)?$": "hltv",
-        "^[!/]correios(?:@PintaoBot)? (.*)$": "correios"
+        "^[!/]correios(?:@PintaoBot)? (.*)$": "correios",
+	    "^[!/]covid(?:@PintaoBot)?": "covid",
+	    "^[!/]ts(?:@PintaoBot)?": "ts",
+	    "^[!/]mine(?:@PintaoBot)?": "mine"
     },
     "callback_query_plugins": [
         "vamojoga"
