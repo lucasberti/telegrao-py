@@ -4,12 +4,26 @@ from api import send_message, send_chat_action
 from revChatGPT.V2 import Chatbot
 import asyncio
 
-config = {
-    "email": os.getenv("OPENAI_REV_EMAIL"),
-    "password": os.getenv("OPENAI_REV_PASSWORD")
-}
+USE_VERSION_2 = False
 
-chatbot = Chatbot(email=config["email"], password=config["password"])
+if USE_VERSION_2:
+    from revChatGPT.V2 import Chatbot
+
+    config = {
+        "email": os.getenv("OPENAI_REV_EMAIL"),
+        "password": os.getenv("OPENAI_REV_PASSWORD")
+    }
+
+    chatbot = Chatbot(email=config["email"], password=config["password"])
+else:
+    from revChatGPT.V1 import Chatbot
+
+    config = {
+        "email": os.getenv("OPENAI_REV_EMAIL"),
+        "password": os.getenv("OPENAI_REV_PASSWORD")
+    }
+
+    chatbot = Chatbot(config=config)
 
 
 async def talk_to_chat_async(prompt):
@@ -24,8 +38,17 @@ async def talk_to_chat_async(prompt):
 
 
 def talk_to_chat(prompt):
+    if not USE_VERSION_2:
+        result = ""
+        print(f"Generating output for {prompt}")
 
-    return asyncio.run(talk_to_chat_async(prompt))
+        for data in chatbot.ask(prompt):
+            result = data["message"]
+            print(data["message"], end="", flush = True)
+
+        return result
+    else:
+        return asyncio.run(talk_to_chat_async(prompt))
 
 
 def run_chat(msg):

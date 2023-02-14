@@ -8,6 +8,7 @@ log.log
 gite
 basezinha.db
 .gitignore
+.python-version
 data/fesdepositadas.txt
 data/arrobas.json
 data/reminders.json
