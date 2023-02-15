@@ -37,7 +37,7 @@ def on_msg_received(msg, matches):
 
     if "reply_to_message" in msg:
         if msg["reply_to_message"]["from"]["id"] == 98532395:
-            send_message(chat, chatgpt.talk_to_chat(text))
+            send_message(chat, chatgpt.talk_to_chat(text, chat_id=chat))
 
 
     dicionario = {
