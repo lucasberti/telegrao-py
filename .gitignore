@@ -16,6 +16,7 @@ data/steam.json
 data/treta_history.txt
 data/values.json
 data/wunder.json
+data/conversations.json
 plugins/vr.py
 requirements.txt
 plugins/covid.py

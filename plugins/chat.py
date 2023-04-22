@@ -3,122 +3,115 @@ import re
 import asyncio
 import uuid
 import json
+import openai
+
 from api import send_message, send_chat_action
 
-USE_VERSION_2 = False
 CONVERSATIONS_FILE = "data/conversations.json"
 
-conversations = None
+class Conversation(object):
+    conversations = None
+    base_prompt = "Você está em um chat do Telegram. Fale em pt-BR. Responda de forma concisa e informal."
 
-if USE_VERSION_2:
-    from revChatGPT.V2 import Chatbot
+    @staticmethod
+    def save_conversations_to_file():
+        print("save")
 
-    config = {
-        "email": os.getenv("OPENAI_REV_EMAIL"),
-        "password": os.getenv("OPENAI_REV_PASSWORD")
-    }
-
-    chatbot = Chatbot(email=config["email"], password=config["password"])
-else:
-    from revChatGPT.V1 import Chatbot
-
-    config = {
-        "email": os.getenv("OPENAI_REV_EMAIL"),
-        "password": os.getenv("OPENAI_REV_PASSWORD")
-    }
-
-    chatbot = Chatbot(config=config)
+        with open(CONVERSATIONS_FILE, "w") as f:
+            f.write(json.dumps(Conversation.conversations, indent=4))
 
 
-async def talk_to_chat_async(prompt, conversation_id=None):
-    result = ""
-    print(f"Generating output for {prompt}")
+    @staticmethod
+    def get_conversation(chat_id):
+        chat_id = str(chat_id)
+        print("get")
 
-    data_count = 0
+        if Conversation.conversations is None:
+            print("if 1 get")
 
-    async for line in chatbot.ask(prompt, conversation_id=conversation_id):
-        if data_count % 10 == 0:
-            send_chat_action(chat, "typing")
+            if not os.path.exists(CONVERSATIONS_FILE):
+                with open(CONVERSATIONS_FILE, "w") as f:
+                    f.write("{}")
+        
+            with open(CONVERSATIONS_FILE, "r") as f:
+                print("with 3 get")
 
-        result += line["choices"][0]["text"].replace("<|im_end|>", "")
-        print(line["choices"][0]["text"].replace("<|im_end|>", ""), end="")
+                Conversation.conversations = json.loads(f.read())
 
-        data_count += 1
+        if str(chat_id) not in Conversation.conversations:
+            print(Conversation.conversations)
 
-    print("result", result)
-    return result
+            print("if 2 get")
+
+            Conversation.reset(chat_id)
+
+            Conversation.save_conversations_to_file()
+        
+        return Conversation.conversations[chat_id]
+
+    
+    @staticmethod
+    def append_message(chat_id, message):
+        print("append")
+        conversation = Conversation.get_conversation(chat_id)
+
+        if "messages" not in conversation:
+            print("if append")
+
+            Conversation.reset(chat_id)
+            
+            conversation = Conversation.get_conversation(chat_id)
+        
+        conversation["messages"].append(message)
+
+        Conversation.save_conversations_to_file()
+
+        return conversation
 
 
-def talk_to_chat(prompt, chat_id=None):
-    if chat_id:
-        conversation_id = get_conversation_id(chat_id)
+    @staticmethod
+    def reset(chat_id):
+        print("reset")
 
+        Conversation.conversations[chat_id] = {}
+
+        Conversation.conversations[chat_id]["messages"] = [
+            {"role": "system", "content": Conversation.base_prompt}
+        ]
+
+        Conversation.save_conversations_to_file()
+
+
+
+def get_chatgpt_response(conversation):
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=conversation
+    )
+
+    return response['choices'][0]['message']
+
+
+def talk_to_chat(prompt, chat_id):
     if prompt.lower() == 'reset':
-        conversation_id = reset_conversation_id(chat_id)
-        prompt = "Olá, ChatGPT. A partir de agora vamos falar em pt-BR."
+        Conversation.reset(chat_id)
 
-    if not USE_VERSION_2:
-        result = ""
-        data_count = 0
+    message = {
+        "role": "user",
+        "content": prompt
+    }
 
-        print(f"Generating output for {prompt}")
-
-        for data in chatbot.ask(prompt):
-            if data_count % 10 == 0:
-                send_chat_action(chat_id, "typing")
-
-            data_count += 1
-
-            result = data["message"]
-
-            print(data["message"], end="", flush = True)
-            print(data["message"], end="", flush = True)
-
-        print(data["message"], end="", flush = True)
-        print("result", result)
-        return result
-    else:
-        return asyncio.run(talk_to_chat_async(prompt, conversation_id=conversation_id))
-
-
-def save_conversations_to_file():
-    global conversations
-
-    with open(CONVERSATIONS_FILE, "w") as f:
-            f.write(json.dumps(conversations))
-
-
-def get_conversation_id(chat_id):
-    global conversations
-
-    if conversations is None:
-        if not os.path.exists(CONVERSATIONS_FILE):
-            with open(CONVERSATIONS_FILE, "w") as f:
-                f.write("{}")
+    conversation = Conversation.append_message(chat_id, message)
+    print(f"Generating output for {prompt}")
     
-        with open(CONVERSATIONS_FILE, "r") as f:
-            conversations = json.loads(f.read())
-
-    if chat_id not in conversations:
-        conversations[chat_id] = str(uuid.uuid4())
-
-        save_conversations_to_file()
+    send_chat_action(chat_id, "typing")
     
-    return conversations[chat_id]
+    result = get_chatgpt_response(conversation["messages"])
+    print("result", result)
 
+    Conversation.append_message(chat_id, result)
 
-
-def reset_conversation_id(chat_id):
-    global conversations
-
-    if conversations is None:
-        get_conversation_id(chat_id)
-
-    conversations[chat_id] = str(uuid.uuid4())
-
-    save_conversations_to_file()
-
-    return conversations[chat_id]
+    return result["content"]
 
 
 def run_chat(msg):
