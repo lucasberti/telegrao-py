@@ -45,6 +45,7 @@ async def talk_to_chat_async(prompt, conversation_id=None):
 
         data_count += 1
 
+    print("result", result)
     return result
 
 
@@ -62,9 +63,9 @@ def talk_to_chat(prompt, chat_id=None):
 
         print(f"Generating output for {prompt}")
 
-        for data in chatbot.ask(prompt, conversation_id=conversation_id):
+        for data in chatbot.ask(prompt):
             if data_count % 10 == 0:
-                send_chat_action(chat, "typing")
+                send_chat_action(chat_id, "typing")
 
             data_count += 1
 
@@ -74,7 +75,7 @@ def talk_to_chat(prompt, chat_id=None):
             print(data["message"], end="", flush = True)
 
         print(data["message"], end="", flush = True)
-
+        print("result", result)
         return result
     else:
         return asyncio.run(talk_to_chat_async(prompt, conversation_id=conversation_id))
