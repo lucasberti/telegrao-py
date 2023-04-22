@@ -86,8 +86,11 @@ class Conversation(object):
 def get_chatgpt_response(conversation):
     response = openai.ChatCompletion.create(
         model="gpt-4",
-        messages=conversation
+        messages=conversation,
+        request_timeout=30.0
     )
+
+    print(response)
 
     return response['choices'][0]['message']
 
@@ -122,9 +125,12 @@ def run_chat(msg):
     match = pattern.search(msg_text)
 
     if match:
-        if match.group(1) is not None:
-            response = talk_to_chat(match.group(1), chat_id=chat)
-        elif match.group(2) is not None:
-            response = talk_to_chat(match.group(2), chat_id=chat)
+        try:
+            if match.group(1) is not None:
+                response = talk_to_chat(match.group(1), chat_id=chat)
+            elif match.group(2) is not None:
+                response = talk_to_chat(match.group(2), chat_id=chat)
 
-        send_message(chat, response)
+            send_message(chat, response)
+        except Exception as e:
+            send_message(chat, f"ops deu probreminha rsrs {str(e)}")
