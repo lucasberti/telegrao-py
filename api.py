@@ -120,7 +120,7 @@ class Api:
         }
 
 
-        response = requests.get(url, params=params)
+        response = requests.post(url, params=params)
         response = json.loads(response.content)
 
         logging.info(response)
@@ -140,7 +140,7 @@ class Api:
             "reply_markup": reply_markup
         }
 
-        response = requests.get(url, params=params)
+        response = requests.post(url, params=params)
         response = json.loads(response.content)
 
         return self._create_message(response)
@@ -154,7 +154,7 @@ class Api:
             "message_id": msg_id
         }
 
-        response = requests.get(url, params=params)
+        response = requests.post(url, params=params)
         response = json.loads(response.content)
 
         return response
@@ -172,7 +172,7 @@ class Api:
             "parse_mode": "Markdown"
         }
 
-        response = requests.get(url, params=params)
+        response = requests.post(url, params=params)
         response = json.loads(response.content)
 
         return self._create_message(response)
@@ -190,7 +190,7 @@ class Api:
             "parse_mode": "Markdown"
         }
 
-        response = requests.get(url, params=params)
+        response = requests.post(url, params=params)
         response = json.loads(response.content)
 
         return self._create_message(response)
@@ -208,7 +208,7 @@ class Api:
             "parse_mode": "Markdown"
         }
 
-        response = requests.get(url, params=params)
+        response = requests.post(url, params=params)
         response = json.loads(response.content)
 
         return self._create_message(response)
@@ -222,7 +222,7 @@ class Api:
             "sticker": sticker_id
         }
 
-        response = requests.get(url, params=params)
+        response = requests.post(url, params=params)
         response = json.loads(response.content)
 
         return self._create_message(response)
@@ -236,7 +236,7 @@ class Api:
             "voice": voice_id
         }
 
-        response = requests.get(url, params=params)
+        response = requests.post(url, params=params)
         response = json.loads(response.content)
 
         return self._create_message(response)
@@ -250,7 +250,7 @@ class Api:
             "action": action
         }
 
-        response = requests.get(url, params=params)
+        response = requests.post(url, params=params)
         response = json.loads(response.content)
 
         return response
@@ -275,7 +275,7 @@ class Api:
         logging.debug(files_request)
         logging.debug(url)
 
-        response = requests.get(url, params=params, files=files_request)
+        response = requests.post(url, params=params, files=files_request)
 
         if response.status_code != 200:
             return self.send_message(chat_id, "Erro ao enviar mensagem")
