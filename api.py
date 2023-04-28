@@ -93,8 +93,7 @@ class Api:
         }
 
         try:
-            response = requests.get(url, params=params)
-            response = json.loads(response.content)
+            response = requests.get(url, params=params).json()
         except Exception:
             return None
 
@@ -120,8 +119,7 @@ class Api:
         }
 
 
-        response = requests.post(url, params=params)
-        response = json.loads(response.content)
+        response = requests.post(url, params=params).json()
 
         logging.info(response)
         return self._create_message(response)
@@ -140,8 +138,7 @@ class Api:
             "reply_markup": reply_markup
         }
 
-        response = requests.post(url, params=params)
-        response = json.loads(response.content)
+        response = requests.post(url, params=params).json()
 
         return self._create_message(response)
 
@@ -154,8 +151,7 @@ class Api:
             "message_id": msg_id
         }
 
-        response = requests.post(url, params=params)
-        response = json.loads(response.content)
+        response = requests.post(url, params=params).json()
 
         return response
 
@@ -172,8 +168,7 @@ class Api:
             "parse_mode": "Markdown"
         }
 
-        response = requests.post(url, params=params)
-        response = json.loads(response.content)
+        response = requests.post(url, params=params).json()
 
         return self._create_message(response)
 
@@ -190,8 +185,7 @@ class Api:
             "parse_mode": "Markdown"
         }
 
-        response = requests.post(url, params=params)
-        response = json.loads(response.content)
+        response = requests.post(url, params=params).json()
 
         return self._create_message(response)
 
@@ -208,8 +202,7 @@ class Api:
             "parse_mode": "Markdown"
         }
 
-        response = requests.post(url, params=params)
-        response = json.loads(response.content)
+        response = requests.post(url, params=params).json()
 
         return self._create_message(response)
 
@@ -222,8 +215,7 @@ class Api:
             "sticker": sticker_id
         }
 
-        response = requests.post(url, params=params)
-        response = json.loads(response.content)
+        response = requests.post(url, params=params).json()
 
         return self._create_message(response)
 
@@ -236,8 +228,7 @@ class Api:
             "voice": voice_id
         }
 
-        response = requests.post(url, params=params)
-        response = json.loads(response.content)
+        response = requests.post(url, params=params).json()
 
         return self._create_message(response)
 
@@ -250,8 +241,7 @@ class Api:
             "action": action
         }
 
-        response = requests.post(url, params=params)
-        response = json.loads(response.content)
+        response = requests.post(url, params=params).json()
 
         return response
 
