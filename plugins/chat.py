@@ -1,21 +1,20 @@
 import os
 import re
-import asyncio
-import uuid
 import json
+import uuid
 import openai
 
 from api import send_message, send_chat_action
 
-CONVERSATIONS_FILE = "data/conversations.json"
 
-class Conversation(object):
+class Conversation:
+    CONVERSATIONS_FILE = "data/conversations.json"
+    DEFAULT_PROMPT = "Você está em um chat do Telegram. Fale em pt-BR. Responda de forma concisa e informal."
+    
     conversations = None
-    base_prompt = "Você está em um chat do Telegram. Fale em pt-BR. Responda de forma concisa e informal."
 
     @staticmethod
     def save_conversations_to_file():
-
         with open(CONVERSATIONS_FILE, "w") as f:
             f.write(json.dumps(Conversation.conversations, indent=4))
 
@@ -29,28 +28,27 @@ class Conversation(object):
             if not os.path.exists(CONVERSATIONS_FILE):
                 with open(CONVERSATIONS_FILE, "w") as f:
                     f.write("{}")
-        
-            with open(CONVERSATIONS_FILE, "r") as f:
 
+            with open(CONVERSATIONS_FILE, "r") as f:
                 Conversation.conversations = json.loads(f.read())
 
         if str(chat_id) not in Conversation.conversations:
             Conversation.reset(chat_id)
 
             Conversation.save_conversations_to_file()
-        
+
         return Conversation.conversations[chat_id]
 
-    
+
     @staticmethod
     def append_message(chat_id, message):
         conversation = Conversation.get_conversation(chat_id)
 
         if "messages" not in conversation:
             Conversation.reset(chat_id)
-            
+
             conversation = Conversation.get_conversation(chat_id)
-        
+
         conversation["messages"].append(message)
 
         Conversation.save_conversations_to_file()
@@ -63,11 +61,10 @@ class Conversation(object):
         Conversation.conversations[chat_id] = {}
 
         Conversation.conversations[chat_id]["messages"] = [
-            {"role": "system", "content": Conversation.base_prompt}
+            {"role": "system", "content": Conversation.DEFAULT_PROMPT}
         ]
 
         Conversation.save_conversations_to_file()
-
 
 
 def get_chatgpt_response(conversation):
