@@ -15,7 +15,6 @@ class Conversation(object):
 
     @staticmethod
     def save_conversations_to_file():
-        print("save")
 
         with open(CONVERSATIONS_FILE, "w") as f:
             f.write(json.dumps(Conversation.conversations, indent=4))
@@ -24,25 +23,18 @@ class Conversation(object):
     @staticmethod
     def get_conversation(chat_id):
         chat_id = str(chat_id)
-        print("get")
 
         if Conversation.conversations is None:
-            print("if 1 get")
 
             if not os.path.exists(CONVERSATIONS_FILE):
                 with open(CONVERSATIONS_FILE, "w") as f:
                     f.write("{}")
         
             with open(CONVERSATIONS_FILE, "r") as f:
-                print("with 3 get")
 
                 Conversation.conversations = json.loads(f.read())
 
         if str(chat_id) not in Conversation.conversations:
-            print(Conversation.conversations)
-
-            print("if 2 get")
-
             Conversation.reset(chat_id)
 
             Conversation.save_conversations_to_file()
@@ -52,12 +44,9 @@ class Conversation(object):
     
     @staticmethod
     def append_message(chat_id, message):
-        print("append")
         conversation = Conversation.get_conversation(chat_id)
 
         if "messages" not in conversation:
-            print("if append")
-
             Conversation.reset(chat_id)
             
             conversation = Conversation.get_conversation(chat_id)
@@ -71,8 +60,6 @@ class Conversation(object):
 
     @staticmethod
     def reset(chat_id):
-        print("reset")
-
         Conversation.conversations[chat_id] = {}
 
         Conversation.conversations[chat_id]["messages"] = [
@@ -85,9 +72,9 @@ class Conversation(object):
 
 def get_chatgpt_response(conversation):
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="gpt-3.5-turbo",
         messages=conversation,
-        request_timeout=30.0
+        request_timeout=60.0
     )
 
     print(response)
@@ -133,4 +120,5 @@ def run_chat(msg):
 
             send_message(chat, response)
         except Exception as e:
+            print(str(e))
             send_message(chat, f"ops deu probreminha rsrs {str(e)}")
