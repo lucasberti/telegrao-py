@@ -71,11 +71,11 @@ class Conversation:
 
     
     @staticmethod
-    def remove_oldest_non_base_message(chat_id):
+    def remove_10_oldest_messages(chat_id):
         chat_id = str(chat_id)
 
         if len(Conversation.conversations[chat_id]["messages"]) > 1:
-            Conversation.conversations[chat_id]["messages"].pop(1)
+            Conversation.conversations[chat_id]["messages"][10:]
 
             Conversation.save_conversations_to_file()
 
@@ -90,7 +90,15 @@ def get_chatgpt_response(conversation, chat_id):
     print(response)
 
     if response['usage']['total_tokens'] > Conversation.MAX_TOKEN_CONTEXT_LENGTH:
-        Conversation.remove_oldest_non_base_message(chat_id)
+        Conversation.remove_10_oldest_messages(chat_id)
+
+        conversation = Conversation.get_conversation(chat_id)["messages"]
+
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=conversation,
+            request_timeout=60.0
+        )
 
     return response['choices'][0]['message']
 
