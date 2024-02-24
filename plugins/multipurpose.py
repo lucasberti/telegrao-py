@@ -112,7 +112,8 @@ def on_msg_received(msg, matches):
 
     if chat == -1001479444301:
         with open("/var/www/html/xet.txt", "a", encoding='utf-8') as f:
-            f.write(f"{msg['from']['username']}: {text}\n")
+            username = msg['from'].get('username', msg['from']["first_name"])
+            f.write(f"{username}: {text}\n")
 
 
     if not stickers_loaded:
